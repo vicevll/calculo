@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculo — 3500 ejercicios</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07070a;--bg2:#0b0b10;--bg3:#111118;--bg4:#181820;
+  --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);
+  --text:#e6e6f0;--text2:#9090a6;--text3:#585868;
+  --accent:#5898f0;--accent-dim:rgba(88,152,240,.12);
+  --green:#3dcc85;--orange:#f0a050;--red:#e85555;--purple:#a078f0;
+  --radius:10px;--radius-sm:7px;--radius-lg:14px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --transition:220ms cubic-bezier(.4,0,.2,1);
+}
+html{font-size:17px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:56px;flex-shrink:0;gap:10px;position:sticky;top:0;z-index:20}
+header .logo{font-weight:800;font-size:1.05rem;color:var(--text);letter-spacing:-.4px;flex-shrink:0}
+header .logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:14px}
+nav button{border:none;background:transparent;color:var(--text2);font-size:.82rem;font-weight:500;cursor:pointer;padding:7px 13px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);white-space:nowrap}
+nav button:hover{color:var(--text);background:var(--bg4)}
+nav button.active{color:var(--accent);background:var(--accent-dim)}
+nav button.metodos-btn{color:var(--purple)}
+nav button.metodos-btn.active{color:var(--purple);background:rgba(160,120,240,.12)}
+nav .sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+header .spacer{flex:1}
+header .controls{display:flex;align-items:center;gap:8px}
+header .controls button{border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:.75rem;font-weight:500;cursor:pointer;padding:5px 11px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font)}
+header .controls button:hover{border-color:var(--border-hover);color:var(--text)}
+header .controls button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+#contador{font-size:.72rem;color:var(--text3)}
+.hide{display:none!important}
+
+main{flex:1;display:flex;overflow:hidden}
+aside{width:210px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;display:flex;flex-direction:column;gap:5px;overflow-y:auto}
+aside .section-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:6px 4px 2px;margin-top:6px}
+aside .section-label:first-child{margin-top:0}
+aside button.diff{border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;padding:10px 12px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);text-align:left;display:flex;align-items:center;gap:8px}
+aside button.diff:hover{border-color:var(--border-hover);color:var(--text);background:var(--bg3)}
+aside button.diff.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+aside button.diff .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+aside button.diff .dot.facil{background:var(--green)}
+aside button.diff .dot.medio{background:var(--orange)}
+aside button.diff .dot.dificil{background:var(--red)}
+
+#grid-area{flex:1;overflow-y:auto;padding:24px 28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:12px;padding-bottom:40px}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;transition:border-color var(--transition),background var(--transition),box-shadow var(--transition);display:flex;flex-direction:column;min-height:200px;position:relative;overflow:hidden}
+.card:hover{border-color:var(--accent);background:var(--bg4);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.card-preview{padding:22px 20px 18px;flex-shrink:0;display:flex;flex-direction:column;height:100%}
+.card .card-num{font-size:.68rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:2px 9px;border-radius:99px;margin-bottom:14px;display:inline-block;flex-shrink:0}
+.card .card-body{flex:1;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--text);line-height:1.55;overflow:hidden;text-align:center;padding:8px 0}
+.card .card-body .katex{font-size:1em}
+.card .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-shrink:0}
+.card .card-badge{font-size:.65rem;color:var(--text3);padding:3px 8px;border-radius:99px;background:var(--bg4)}
+.card .card-hint{font-size:.68rem;color:var(--text3)}
+
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;height:60vh;color:var(--text3);gap:12px}
+.loading .spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Popup */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.popup-overlay.open{opacity:1;pointer-events:auto}
+.popup{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);max-width:640px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7);transform:scale(.95) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.popup-overlay.open .popup{transform:scale(1) translateY(0)}
+.popup-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.popup-header .popup-num{font-size:.7rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:3px 10px;border-radius:99px;flex-shrink:0}
+.popup-header .popup-close{border:1px solid var(--border);background:var(--bg4);color:var(--text2);font-size:1.1rem;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all var(--transition);flex-shrink:0}
+.popup-header .popup-close:hover{color:var(--text);border-color:var(--border-hover)}
+.popup-body{padding:20px 22px 24px;flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.popup-section{margin-bottom:20px;flex-shrink:0}
+.popup-section.grow{flex:1;min-height:0;display:flex;flex-direction:column;margin-bottom:0}
+.popup-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:10px;flex-shrink:0}
+.popup-exercise{font-size:1rem;color:var(--text);line-height:1.7;text-align:center;padding:10px 0}
+.popup-exercise .katex{font-size:1.1em}
+.sol-toggle{width:100%;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:.85rem;font-weight:600;cursor:pointer;padding:11px 16px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;margin-bottom:0}
+.sol-toggle:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.sol-toggle .arr{transition:transform var(--transition);font-size:.7rem}
+.sol-toggle.open{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);margin-bottom:14px}
+.sol-toggle.open .arr{transform:rotate(180deg)}
+.sol-steps{flex:1;min-height:0;overflow-y:auto;display:none}
+.sol-steps.open{display:block}
+.sol-steps-inner{padding:0 0 8px}
+.sol-step{padding:14px 0;border-bottom:1px solid var(--border)}
+.sol-step:last-child{border-bottom:none;padding-bottom:0}
+.sol-step .step-num{font-size:.68rem;font-weight:600;color:var(--accent);background:var(--accent-dim);padding:3px 9px;border-radius:99px;display:inline-block;margin-bottom:6px}
+.sol-step .step-why{font-size:.85rem;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.sol-step .step-math{font-size:.92rem;color:var(--text);padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);line-height:1.9;overflow-x:auto}
+.sol-step .step-math .katex{font-size:1em}
+.sol-loading{display:flex;align-items:center;justify-content:center;padding:30px;color:var(--text3);gap:10px}
+.sol-loading .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+
+/* Methods */
+#methods-view{flex:1;overflow-y:auto;padding:28px 36px;display:none}
+#methods-view.active{display:block}
+.methods-header{margin-bottom:24px}
+.methods-header h2{font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.methods-header p{font-size:.85rem;color:var(--text2);line-height:1.5}
+.method-tabs{display:flex;gap:4px;margin-bottom:20px}
+.method-tabs button{border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font)}
+.method-tabs button:hover{color:var(--text);background:var(--bg3)}
+.method-tabs button.active{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+.method-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.method-card h4{font-size:.88rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.method-card .formula{font-size:.92rem;color:var(--text);padding:10px 14px;background:var(--bg4);border-radius:var(--radius-sm);border:1px solid var(--border);line-height:1.9;margin-bottom:8px;overflow-x:auto}
+.method-card .formula .katex{font-size:1em}
+.method-card .desc{font-size:.82rem;color:var(--text2);line-height:1.55;margin-bottom:8px}
+.method-card .example{font-size:.85rem;color:var(--green);margin-top:6px}
+.method-card .example .katex{font-size:.95em}
+
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bg4);color:var(--text);padding:10px 22px;border-radius:var(--radius);border:1px solid var(--border);font-size:.82rem;box-shadow:0 4px 24px rgba(0,0,0,.5);z-index:100;opacity:0;pointer-events:none;transition:opacity .3s}
+#toast.visible{opacity:1;pointer-events:auto}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:10px}
+.sol-steps::-webkit-scrollbar-thumb{background:rgba(88,152,240,.25)}
+.sol-steps::-webkit-scrollbar-thumb:hover{background:rgba(88,152,240,.4)}
+
+@media(max-width:768px){html{font-size:15px}main{flex-direction:column}aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:4px;border-right:none;border-bottom:1px solid var(--border)}aside .section-label{display:none}aside button.diff{font-size:.72rem;padding:7px 9px;flex:1;min-width:70px;justify-content:center}.grid{grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px}#grid-area{padding:12px 8px}#methods-view{padding:16px 12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">calcu<span>lo</span></div>
+  <nav>
+    <button data-tema="derivadas" class="active">Derivadas</button>
+    <button data-tema="integrales">Integrales</button>
+    <button data-tema="limites">Limites</button>
+    <span class="sep"></span>
+    <button data-tema="metodos" class="metodos-btn">Metodos</button>
+  </nav>
+  <div class="spacer"></div>
+  <div class="controls" id="exercise-controls">
+    <span id="contador"></span>
+    <button id="btn-reiniciar">Reiniciar</button>
+    <button id="btn-aleatorio" class="primary">Aleatorio</button>
+  </div>
+</header>
+<main>
+  <aside id="sidebar">
+    <div class="section-label">Dificultad</div>
+    <button class="diff active" data-diff="facilito"><span class="dot facil"></span>Facil</button>
+    <button class="diff" data-diff="dificilito"><span class="dot medio"></span>Intermedio</button>
+    <button class="diff" data-diff="extremo"><span class="dot dificil"></span>Avanzado</button>
+  </aside>
+  <div id="grid-area"></div>
+  <div id="methods-view"></div>
+</main>
+<div id="toast"></div>
+<div class="popup-overlay" id="popup-overlay"><div class="popup" id="popup"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+const API = '';
+
+// ========== METHODS (static, no backend needed) ==========
+const methods = {
+derivadas: [
+  {title:"Regla de la Potencia", formula:"$$\\frac{d}{dx}[ax^n] = a \\cdot n \\cdot x^{n-1}$$", desc:"La base de todas las derivadas. El exponente multiplica al coeficiente y baja en 1.", eg:"$$f(x)=3x^4 \\;\\Rightarrow\\; f'(x)=12x^3$$"},
+  {title:"Regla del Producto", formula:"$$(u \\cdot v)' = u' \\cdot v + u \\cdot v'$$", desc:"Cuando hay dos funciones multiplicandose, derivamos la primera por la segunda sin derivar, mas la primera sin derivar por la segunda derivada.", eg:"$$f(x)=x^2\\sin x \\;\\Rightarrow\\; f'(x)=2x\\sin x + x^2\\cos x$$"},
+  {title:"Regla del Cociente", formula:"$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^2}$$", desc:"Para divisiones. Derivada del numerador por denominador, menos numerador por derivada del denominador, todo sobre denominador al cuadrado.", eg:"$$f(x)=\\frac{x}{x+1} \\;\\Rightarrow\\; f'(x)=\\frac{1}{(x+1)^2}$$"},
+  {title:"Regla de la Cadena", formula:"$$\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x)$$", desc:"Para funciones compuestas. Se deriva de afuera hacia adentro.", eg:"$$f(x)=\\sin(x^2) \\;\\Rightarrow\\; f'(x)=\\cos(x^2)\\cdot 2x$$"},
+  {title:"Derivada del Logaritmo", formula:"$$\\frac{d}{dx}[\\ln(u)] = \\frac{u'}{u}$$", desc:"La derivada del logaritmo natural es la derivada de lo de dentro dividida entre lo de dentro.", eg:"$$f(x)=\\ln(3x+2) \\;\\Rightarrow\\; f'(x)=\\frac{3}{3x+2}$$"},
+  {title:"Derivacion Implicita", formula:"$$\\frac{d}{dx}[y^n] = n y^{n-1} \\cdot \\frac{dy}{dx}$$", desc:"Cuando y depende de x pero no esta despejada.", eg:"$$x^2+y^2=25 \\;\\Rightarrow\\; \\frac{dy}{dx}=-\\frac{x}{y}$$"},
+  {title:"Derivacion Logaritmica", formula:"$$\\ln f(x) \\;\\Rightarrow\\; \\frac{f'(x)}{f(x)}$$", desc:"Para funciones del tipo f(x)^g(x).", eg:"$$f(x)=x^x \\;\\Rightarrow\\; f' = x^x(\\ln x + 1)$$"},
+  {title:"Derivada de la Funcion Inversa", formula:"$$\\frac{d}{dx}[f^{-1}(x)] = \\frac{1}{f'(f^{-1}(x))}$$", desc:"Hallar la derivada de la inversa sin despejarla.", eg:"$$y=\\arcsin x \\;\\Rightarrow\\; \\frac{dy}{dx}=\\frac{1}{\\sqrt{1-x^2}}$$"},
+  {title:"Funciones Hiperbolicas", formula:"$$\\frac{d}{dx}\\sinh x = \\cosh x,\\; \\frac{d}{dx}\\cosh x = \\sinh x$$", desc:"Derivadas similares a las trigonometricas pero sin cambios de signo.", eg:"$$f(x)=\\tanh x \\;\\Rightarrow\\; f'(x)=1-\\tanh^2 x$$"},
+  {title:"Regla de Leibniz", formula:"$$(uv)^{(n)} = \\sum_{k=0}^{n} \\binom{n}{k} u^{(n-k)} v^{(k)}$$", desc:"Generalizacion de la regla del producto para orden n. Patron del binomio de Newton.", eg:"$$f(x)=x^2 e^x \\;\\Rightarrow\\; f'''(x)=x^2 e^x + 6x e^x + 6 e^x$$"},
+  {title:"Formula de Faa di Bruno", formula:"$$\\frac{d^n}{dx^n}f(g(x)) = \\sum \\frac{n!}{k_1!\\cdots k_n!} f^{(k)}(g(x)) \\prod \\left(\\frac{g^{(j)}(x)}{j!}\\right)^{k_j}$$", desc:"Cadena de orden n. Usada en software simbolico y combinatoria.", eg:"Para n=2: f''(g(x))[g'(x)]^2 + f'(g(x))g''(x)"},
+],
+integrales: [
+  {title:"Regla de la Potencia (inversa)", formula:"$$\\int ax^n\\,dx = a\\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1)$$", desc:"Sumamos 1 al exponente y dividimos entre el nuevo exponente.", eg:"$$\\int 4x^3\\,dx = x^4 + C$$"},
+  {title:"Integral de 1/x", formula:"$$\\int \\frac{1}{x}\\,dx = \\ln|x| + C$$", desc:"Caso especial: no se puede usar la regla de potencia.", eg:"$$\\int \\frac{3}{x}\\,dx = 3\\ln|x| + C$$"},
+  {title:"Sustitucion", formula:"$$\\int f(g(x)) \\cdot g'(x)\\,dx = \\int f(u)\\,du$$", desc:"Se busca una parte cuya derivada tambien aparezca.", eg:"$$\\int 2x(x^2+1)^3\\,dx = \\frac{(x^2+1)^4}{4}+C$$"},
+  {title:"Integracion por Partes", formula:"$$\\int u\\,dv = uv - \\int v\\,du$$", desc:"Inversa de la regla del producto.", eg:"$$\\int x e^x\\,dx = e^x(x-1) + C$$"},
+  {title:"Fracciones Parciales", formula:"$$\\frac{P(x)}{Q(x)} = \\frac{A}{x-a} + \\frac{B}{x-b} + \\cdots$$", desc:"Se factoriza el denominador y se descompone.", eg:"$$\\int\\frac{1}{x^2-1}dx = \\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right| + C$$"},
+  {title:"Sustitucion Trigonometrica", formula:"$$\\sqrt{a^2-x^2} \\to x=a\\sin\\theta$$", desc:"Para integrales con raices cuadradas.", eg:"$$\\int\\frac{1}{\\sqrt{1-x^2}}\\,dx = \\arcsin x + C$$"},
+  {title:"Integrales Ciclicas", formula:"$$\\int e^{ax}\\sin(bx)\\,dx$$", desc:"Al aplicar partes dos veces, la integral reaparece.", eg:"$$\\int e^x\\sin x\\,dx = \\frac{e^x}{2}(\\sin x - \\cos x) + C$$"},
+  {title:"Metodo de Hermite-Ostrogradsky", formula:"$$\\int \\frac{P(x)}{Q(x)}dx = \\frac{P_1(x)}{Q_1(x)} + \\int \\frac{P_2(x)}{Q_2(x)}dx$$", desc:"Integra racionales SIN fracciones parciales. Separa parte racional de logaritmica.", eg:"$$\\int\\frac{1}{(x^2+1)^2}dx = \\frac{x}{2(x^2+1)} + \\frac{1}{2}\\arctan x + C$$"},
+  {title:"Sustitucion de Weierstrass", formula:"$$t = \\tan\\frac{x}{2},\\; \\sin x = \\frac{2t}{1+t^2},\\; \\cos x = \\frac{1-t^2}{1+t^2}$$", desc:"Convierte cualquier racional trigonometrica en racional de t.", eg:"$$\\int\\frac{1}{1+\\cos x}dx = \\tan\\frac{x}{2} + C$$"},
+  {title:"Formulas de Reduccion", formula:"$$\\int \\sin^n x\\,dx = -\\frac{1}{n}\\sin^{n-1}x\\cos x + \\frac{n-1}{n}\\int \\sin^{n-2}x\\,dx$$", desc:"Reducen potencias paso a paso.", eg:"$$\\int \\sin^4 x\\,dx = -\\frac{1}{4}\\sin^3 x\\cos x + \\frac{3}{4}\\int\\sin^2 x\\,dx$$"},
+  {title:"Coeficientes Indeterminados", formula:"$$\\int P(x)e^{ax}\\sin(bx)dx = e^{ax}(Q(x)\\sin bx + R(x)\\cos bx)$$", desc:"Para polinomio * exponencial * trigonometrica. Se propone solucion y se deriva.", eg:"$$\\int x e^x\\sin x\\,dx = e^x\\left(\\frac{x}{2}(\\sin x-\\cos x) + \\frac{1}{2}\\cos x\\right) + C$$"},
+],
+limites: [
+  {title:"Sustitucion Directa", formula:"$$\\lim_{x\\to a} f(x) = f(a)$$", desc:"Si la funcion es continua, evaluamos directamente.", eg:"$$\\lim_{x\\to 2}(x^2+3) = 7$$"},
+  {title:"Factorizacion", formula:"$$\\frac{x^2-a^2}{x-a} = x+a$$", desc:"Cuando da 0/0, factorizamos y cancelamos.", eg:"$$\\lim_{x\\to 3}\\frac{x^2-9}{x-3} = 6$$"},
+  {title:"Racionalizacion", formula:"$$\\frac{\\sqrt{x+a}-\\sqrt{a}}{x}$$", desc:"Multiplicamos por el conjugado para eliminar raices.", eg:"$$\\lim_{x\\to 0}\\frac{\\sqrt{x+1}-1}{x} = \\frac{1}{2}$$"},
+  {title:"Limites al Infinito", formula:"$$\\lim_{x\\to\\infty}\\frac{a_nx^n}{b_mx^m}$$", desc:"n=m: a_n/b_m. n<m: 0. n>m: infinito.", eg:"$$\\lim_{x\\to\\infty}\\frac{2x^3}{3x^3} = \\frac{2}{3}$$"},
+  {title:"Regla de L'Hopital", formula:"$$\\lim\\frac{f(x)}{g(x)} = \\lim\\frac{f'(x)}{g'(x)}$$", desc:"Para 0/0 o inf/inf. Derivar numerador y denominador por separado.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin x}{x} = 1$$"},
+  {title:"Limites Trigonometricos Notables", formula:"$$\\lim_{x\\to 0}\\frac{\\sin x}{x}=1,\\;\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}=\\frac{1}{2}$$", desc:"Limites fundamentales que conviene memorizar.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin(3x)}{x} = 3$$"},
+  {title:"El numero e", formula:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{1}{x}\\right)^x = e$$", desc:"Define e. Forma general: lim(1+a/x)^(bx) = e^(ab).", eg:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{3}{x}\\right)^{2x} = e^6$$"},
+  {title:"Indeterminacion 0 * inf", formula:"$$\\lim_{x\\to 0^+} x\\ln x$$", desc:"Se reescribe como cociente para aplicar L'Hopital.", eg:"$$\\lim_{x\\to 0^+} x\\ln x = 0$$"},
+  {title:"Series de Taylor", formula:"$$e^x = 1 + x + \\frac{x^2}{2!} + \\cdots,\\; \\sin x = x - \\frac{x^3}{3!} + \\cdots$$", desc:"Sustituir por primeros terminos de Taylor. Util cuando L'Hopital es muy largo.", eg:"$$\\lim_{x\\to 0}\\frac{x-\\sin x}{x^3} = \\frac{1}{6}$$"},
+  {title:"Infinitesimos Equivalentes", formula:"$$\\sin x \\sim x,\\; \\tan x \\sim x,\\; 1-\\cos x \\sim \\frac{x^2}{2},\\; \\ln(1+x)\\sim x$$", desc:"Reemplazar factores por infinitesimos equivalentes. Solo en productos/cocientes.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin(2x)\\cdot\\ln(1+x)}{x\\cdot\\tan x} = 2$$"},
+  {title:"Criterio de Stolz-Cesaro", formula:"$$\\lim\\frac{a_n}{b_n} = \\lim\\frac{a_{n+1}-a_n}{b_{n+1}-b_n}$$", desc:"L'Hopital discreto para sucesiones.", eg:"$$\\lim\\frac{1^2+2^2+\\cdots+n^2}{n^3} = \\frac{1}{3}$$"},
+  {title:"Teorema del Sandwich", formula:"$$g(x) \\leq f(x) \\leq h(x),\\; \\lim g = \\lim h = L \\Rightarrow \\lim f = L$$", desc:"Funcion atrapada entre dos que tienden al mismo limite.", eg:"$$\\lim_{x\\to 0} x^2\\sin(1/x) = 0$$"},
+]
+};
+
+// ========== STATE ==========
+const state = { tema:'derivadas', dificultad:'facilito', ejercicios:[], vistos:new Set(), metodoTema:'derivadas', loading:false };
+
+// ========== API CALLS ==========
+async function fetchExercises(tema, dificultad, count=200) {
+  const res = await fetch(`${API}/api/exercises?tema=${tema}&dificultad=${dificultad}&count=${count}`);
+  if (!res.ok) throw new Error('Error al cargar ejercicios');
+  return res.json();
+}
+
+async function fetchSolution(id) {
+  const res = await fetch(`${API}/api/solution/${id}`);
+  if (!res.ok) throw new Error('Error al cargar solucion');
+  return res.json();
+}
+
+// ========== LOAD & RENDER GRID ==========
+async function loadGrid() {
+  state.loading = true;
+  const area = document.getElementById('grid-area');
+  area.innerHTML = '<div class="loading"><div class="spinner"></div>Cargando ejercicios...</div>';
+  try {
+    state.ejercicios = await fetchExercises(state.tema, state.dificultad);
+    state.vistos = new Set();
+    renderGrid();
+  } catch(e) {
+    area.innerHTML = '<div class="loading">Error de conexion con el backend. Asegurate de que el servidor esta corriendo.</div>';
+  }
+  state.loading = false;
+}
+
+function renderGrid() {
+  const area = document.getElementById('grid-area');
+  const items = state.ejercicios;
+  if (!items.length) { area.innerHTML = '<div class="loading">No hay ejercicios.</div>'; return; }
+  area.innerHTML = `<div class="grid" id="grid">${items.map((ej, i) => `
+    <div class="card" data-idx="${i}" id="card-${i}">
+      <div class="card-preview">
+        <span class="card-num">#${i+1}</span>
+        <div class="card-body">${ej.e}</div>
+        <div class="card-footer">
+          <span class="card-badge">${state.vistos.has(i) ? 'Visto' : 'Nuevo'}</span>
+          <span class="card-hint">Click para abrir</span>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+  try { renderMathInElement(area, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => openPopup(parseInt(card.dataset.idx)));
+  });
+  document.getElementById('contador').textContent = `${state.vistos.size} / ${items.length}`;
+}
+
+// ========== POPUP ==========
+async function openPopup(idx) {
+  const ej = state.ejercicios[idx];
+  if (!ej) return;
+  state.vistos.add(idx);
+  const card = document.getElementById('card-' + idx);
+  if (card) card.querySelector('.card-badge').textContent = 'Visto';
+
+  const overlay = document.getElementById('popup-overlay');
+  const popup = document.getElementById('popup');
+
+  // Show popup immediately with exercise + loading solution
+  popup.innerHTML = `
+    <div class="popup-header">
+      <span class="popup-num">#${idx+1}</span>
+      <button class="popup-close" id="popup-close">&times;</button>
+    </div>
+    <div class="popup-body">
+      <div class="popup-section">
+        <div class="popup-label">Ejercicio</div>
+        <div class="popup-exercise">${ej.e}</div>
+      </div>
+      <div class="popup-section">
+        <div class="popup-label">Resultado</div>
+        <div id="sol-result" class="sol-loading"><div class="spinner"></div>Cargando...</div>
+      </div>
+    </div>`;
+
+  overlay.classList.add('open');
+  try { renderMathInElement(popup, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
+
+  document.getElementById('popup-close').addEventListener('click', closePopup);
+
+  // Fetch and show result immediately
+  try {
+    const sol = await fetchSolution(ej.id);
+    const resultDiv = document.getElementById('sol-result');
+    if (sol.s && sol.s.length > 0) {
+      resultDiv.className = 'popup-exercise';
+      resultDiv.innerHTML = `$$${sol.s[sol.s.length - 1][0]}$$`;
+      try { renderMathInElement(resultDiv, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
+    } else {
+      resultDiv.className = '';
+      resultDiv.textContent = 'Sin resultado disponible.';
+    }
+  } catch(err) {
+    const resultDiv = document.getElementById('sol-result');
+    resultDiv.className = '';
+    resultDiv.textContent = 'Error al cargar el resultado.';
+  }
+
+  document.getElementById('contador').textContent = `${state.vistos.size} / ${state.ejercicios.length}`;
+}
+
+function closePopup() { document.getElementById('popup-overlay').classList.remove('open'); }
+document.getElementById('popup-overlay').addEventListener('click', e => { if (e.target.id === 'popup-overlay') closePopup(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+
+// ========== CONTROLS ==========
+function randomCard() {
+  const unseen = state.ejercicios.map((_, i) => i).filter(i => !state.vistos.has(i));
+  const pool = unseen.length ? unseen : state.ejercicios.map((_, i) => i);
+  const idx = pool[Math.floor(Math.random() * pool.length)];
+  openPopup(idx);
+  const card = document.getElementById('card-' + idx);
+  if (card) card.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+document.getElementById('btn-aleatorio').addEventListener('click', randomCard);
+document.getElementById('btn-reiniciar').addEventListener('click', () => { loadGrid(); toast('200 nuevos ejercicios'); });
+
+// ========== METHODS ==========
+function renderMethods() {
+  const mv = document.getElementById('methods-view');
+  const m = methods[state.metodoTema];
+  mv.innerHTML = `
+    <div class="methods-header">
+      <h2>Metodos de ${state.metodoTema.charAt(0).toUpperCase()+state.metodoTema.slice(1)}</h2>
+      <p>Guia de referencia con formulas, explicaciones y ejemplos.</p>
+    </div>
+    <div class="method-tabs">
+      ${['derivadas','integrales','limites'].map(t => `
+        <button data-mt="${t}" class="${t===state.metodoTema?'active':''}">${t.charAt(0).toUpperCase()+t.slice(1)}</button>
+      `).join('')}
+    </div>
+    ${m.map(sec => `
+      <div class="method-card">
+        <h4>${sec.title}</h4>
+        <div class="formula">${sec.formula}</div>
+        <div class="desc">${sec.desc}</div>
+        <div class="example">Ejemplo: ${sec.eg}</div>
+      </div>
+    `).join('')}`;
+  try { renderMathInElement(mv, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
+  mv.querySelectorAll('.method-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => { state.metodoTema = btn.dataset.mt; renderMethods(); });
+  });
+}
+
+// ========== NAVIGATION ==========
+function switchView(v) {
+  const grid = document.getElementById('grid-area'), mv = document.getElementById('methods-view');
+  const sidebar = document.getElementById('sidebar'), ctrls = document.getElementById('exercise-controls');
+  if (v === 'metodos') {
+    grid.style.display = 'none'; mv.style.display = 'block'; mv.classList.add('active');
+    sidebar.classList.add('hide'); ctrls.classList.add('hide');
+    renderMethods();
+  } else {
+    grid.style.display = ''; mv.style.display = 'none'; mv.classList.remove('active');
+    sidebar.classList.remove('hide'); ctrls.classList.remove('hide');
+    state.tema = v; loadGrid();
+  }
+}
+
+document.querySelectorAll('nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    switchView(btn.dataset.tema);
+  });
+});
+
+document.querySelectorAll('aside button.diff').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('aside button.diff').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.dificultad = btn.dataset.diff;
+    loadGrid();
+  });
+});
+
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
+
+// ========== START ==========
+loadGrid();
+</script>
+</body>
+</html>
