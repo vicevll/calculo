@@ -127,6 +127,32 @@ aside button.diff .dot.dificil{background:var(--red)}
 .sol-steps::-webkit-scrollbar-thumb{background:rgba(88,152,240,.25)}
 .sol-steps::-webkit-scrollbar-thumb:hover{background:rgba(88,152,240,.4)}
 
+/* Result reveal */
+.result-reveal{
+  width:100%;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);
+  font-size:.88rem;font-weight:600;cursor:pointer;padding:14px 16px;border-radius:var(--radius-sm);
+  transition:all var(--transition);font-family:var(--font);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.result-reveal:hover{background:var(--accent);color:#fff}
+.result-reveal .arr{transition:transform var(--transition);font-size:.7rem}
+.result-reveal.open .arr{transform:rotate(180deg)}
+.result-hidden{display:flex;align-items:center;justify-content:center;min-height:60px;color:var(--text3);font-size:.85rem}
+
+/* Popup navigation */
+.popup-nav{
+  display:flex;gap:8px;padding:0 22px 20px;flex-shrink:0;
+}
+.popup-nav button{
+  flex:1;border:1px solid var(--border);background:var(--bg3);color:var(--text2);
+  font-size:.82rem;font-weight:600;cursor:pointer;padding:10px 14px;border-radius:var(--radius-sm);
+  transition:all var(--transition);font-family:var(--font);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.popup-nav button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.popup-nav button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.popup-nav button.primary:hover{opacity:.85}
+
 @media(max-width:768px){html{font-size:15px}main{flex-direction:column}aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:4px;border-right:none;border-bottom:1px solid var(--border)}aside .section-label{display:none}aside button.diff{font-size:.72rem;padding:7px 9px;flex:1;min-width:70px;justify-content:center}.grid{grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px}#grid-area{padding:12px 8px}#methods-view{padding:16px 12px}}
 </style>
 </head>
@@ -144,7 +170,7 @@ aside button.diff .dot.dificil{background:var(--red)}
   <div class="controls" id="exercise-controls">
     <span id="contador"></span>
     <button id="btn-reiniciar">Reiniciar</button>
-    <button id="btn-aleatorio" class="primary">Aleatorio</button>
+    <button id="btn-aleatorio" class="primary">Aleatorio <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-left:3px"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="16" r="1.2" fill="currentColor"/><circle cx="16" cy="16" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></button>
   </div>
 </header>
 <main>
@@ -163,15 +189,17 @@ aside button.diff .dot.dificil{background:var(--red)}
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <script>
-// ========== LOAD STATIC DATA ==========
+// ========== STATIC DATA LOADED FROM exercises.json ==========
 let allData = [];
 let dataByCategory = {};
+let dataById = new Map();
 
 async function loadAllData() {
   const res = await fetch('./exercises.json');
   const json = await res.json();
   allData = json.exercises;
   allData.forEach(ex => {
+    dataById.set(ex.id, ex);
     const key = `${ex.tema}-${ex.dificultad}`;
     if (!dataByCategory[key]) dataByCategory[key] = [];
     dataByCategory[key].push(ex);
@@ -225,7 +253,7 @@ limites: [
 // ========== STATE ==========
 const state = { tema:'derivadas', dificultad:'facilito', ejercicios:[], vistos:new Set(), metodoTema:'derivadas', loading:false };
 
-// ========== DATA FILTERING ==========
+// ========== DATA ACCESS (static, no backend) ==========
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -235,6 +263,7 @@ function shuffle(arr) {
   return a;
 }
 
+// ========== LOAD & RENDER GRID ==========
 async function loadGrid() {
   state.loading = true;
   const area = document.getElementById('grid-area');
@@ -242,12 +271,12 @@ async function loadGrid() {
   try {
     if (!allData.length) await loadAllData();
     const key = `${state.tema}-${state.dificultad}`;
-    const pool = dataByCategory[key] || [];
-    state.ejercicios = shuffle(pool).slice(0, 200).map(ex => ({ id: ex.id, e: ex.e, _full: ex }));
+    const pool = shuffle(dataByCategory[key] || []);
+    state.ejercicios = pool.slice(0, 200);
     state.vistos = new Set();
     renderGrid();
   } catch(e) {
-    area.innerHTML = '<div class="loading">Error al cargar exercises.json.</div>';
+    area.innerHTML = '<div class="loading">Error al cargar exercises.json</div>';
   }
   state.loading = false;
 }
@@ -282,12 +311,14 @@ function openPopup(idx) {
   const card = document.getElementById('card-' + idx);
   if (card) card.querySelector('.card-badge').textContent = 'Visto';
 
-  const overlay = document.getElementById('popup-overlay');
-  const popup = document.getElementById('popup');
+  renderPopupContent(idx);
+}
 
-  // Get result from in-memory data (no fetch needed)
-  const full = ej._full;
-  const result = (full.s && full.s.length > 0) ? full.s[full.s.length - 1][0] : 'Sin resultado';
+function renderPopupContent(idx) {
+  const ej = state.ejercicios[idx];
+  if (!ej) return;
+  const popup = document.getElementById('popup');
+  const overlay = document.getElementById('popup-overlay');
 
   popup.innerHTML = `
     <div class="popup-header">
@@ -301,14 +332,61 @@ function openPopup(idx) {
       </div>
       <div class="popup-section">
         <div class="popup-label">Resultado</div>
-        <div class="popup-exercise">$$${result}$$</div>
+        <button class="result-reveal" id="result-btn"><span class="arr">&#9660;</span> Ver resultado</button>
+        <div id="result-content" class="result-hidden" style="display:none"></div>
       </div>
+    </div>
+    <div class="popup-nav">
+      <button id="popup-close-btn">Cerrar</button>
+      <button class="primary" id="popup-next-btn">Siguiente ejercicio &rarr;</button>
     </div>`;
 
   overlay.classList.add('open');
   try { renderMathInElement(popup, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
 
   document.getElementById('popup-close').addEventListener('click', closePopup);
+  document.getElementById('popup-close-btn').addEventListener('click', closePopup);
+
+  // Result reveal
+  const resultBtn = document.getElementById('result-btn');
+  const resultContent = document.getElementById('result-content');
+  let resultShown = false;
+
+  resultBtn.addEventListener('click', async () => {
+    if (resultShown) {
+      resultContent.style.display = 'none';
+      resultBtn.classList.remove('open');
+      resultBtn.innerHTML = '<span class="arr">&#9660;</span> Ver resultado';
+      resultShown = false;
+      return;
+    }
+    // Get result from in-memory data (no fetch needed)
+    const sol = dataById.get(ej.id);
+    if (sol && sol.s && sol.s.length > 0) {
+      resultContent.className = 'popup-exercise';
+      resultContent.innerHTML = `$$${sol.s[sol.s.length - 1][0]}$$`;
+      resultContent.style.display = '';
+      try { renderMathInElement(resultContent, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
+      resultBtn.classList.add('open');
+      resultBtn.innerHTML = '<span class="arr">&#9660;</span> Ocultar resultado';
+      resultShown = true;
+    } else {
+      resultContent.className = '';
+      resultContent.textContent = 'Sin resultado.';
+      resultContent.style.display = '';
+    }
+  });
+
+  // Next exercise
+  document.getElementById('popup-next-btn').addEventListener('click', () => {
+    const nextIdx = pickRandomUnseen();
+    if (nextIdx !== null) {
+      openPopup(nextIdx);
+      const c = document.getElementById('card-' + nextIdx);
+      if (c) c.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+
   document.getElementById('contador').textContent = `${state.vistos.size} / ${state.ejercicios.length}`;
 }
 
@@ -317,13 +395,19 @@ document.getElementById('popup-overlay').addEventListener('click', e => { if (e.
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
 
 // ========== CONTROLS ==========
-function randomCard() {
+function pickRandomUnseen() {
   const unseen = state.ejercicios.map((_, i) => i).filter(i => !state.vistos.has(i));
   const pool = unseen.length ? unseen : state.ejercicios.map((_, i) => i);
-  const idx = pool[Math.floor(Math.random() * pool.length)];
+  if (!pool.length) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function randomCard() {
+  const idx = pickRandomUnseen();
+  if (idx === null) return;
   openPopup(idx);
   const card = document.getElementById('card-' + idx);
-  if (card) card.scrollIntoView({ behavior:'smooth', block:'center' });
+  if (card) card.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 document.getElementById('btn-aleatorio').addEventListener('click', randomCard);

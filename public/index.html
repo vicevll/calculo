@@ -127,6 +127,32 @@ aside button.diff .dot.dificil{background:var(--red)}
 .sol-steps::-webkit-scrollbar-thumb{background:rgba(88,152,240,.25)}
 .sol-steps::-webkit-scrollbar-thumb:hover{background:rgba(88,152,240,.4)}
 
+/* Result reveal */
+.result-reveal{
+  width:100%;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);
+  font-size:.88rem;font-weight:600;cursor:pointer;padding:14px 16px;border-radius:var(--radius-sm);
+  transition:all var(--transition);font-family:var(--font);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.result-reveal:hover{background:var(--accent);color:#fff}
+.result-reveal .arr{transition:transform var(--transition);font-size:.7rem}
+.result-reveal.open .arr{transform:rotate(180deg)}
+.result-hidden{display:flex;align-items:center;justify-content:center;min-height:60px;color:var(--text3);font-size:.85rem}
+
+/* Popup navigation */
+.popup-nav{
+  display:flex;gap:8px;padding:0 22px 20px;flex-shrink:0;
+}
+.popup-nav button{
+  flex:1;border:1px solid var(--border);background:var(--bg3);color:var(--text2);
+  font-size:.82rem;font-weight:600;cursor:pointer;padding:10px 14px;border-radius:var(--radius-sm);
+  transition:all var(--transition);font-family:var(--font);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.popup-nav button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.popup-nav button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.popup-nav button.primary:hover{opacity:.85}
+
 @media(max-width:768px){html{font-size:15px}main{flex-direction:column}aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:4px;border-right:none;border-bottom:1px solid var(--border)}aside .section-label{display:none}aside button.diff{font-size:.72rem;padding:7px 9px;flex:1;min-width:70px;justify-content:center}.grid{grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px}#grid-area{padding:12px 8px}#methods-view{padding:16px 12px}}
 </style>
 </head>
@@ -144,7 +170,7 @@ aside button.diff .dot.dificil{background:var(--red)}
   <div class="controls" id="exercise-controls">
     <span id="contador"></span>
     <button id="btn-reiniciar">Reiniciar</button>
-    <button id="btn-aleatorio" class="primary">Aleatorio</button>
+    <button id="btn-aleatorio" class="primary">Aleatorio <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-left:3px"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="16" r="1.2" fill="currentColor"/><circle cx="16" cy="16" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></button>
   </div>
 </header>
 <main>
@@ -263,17 +289,22 @@ function renderGrid() {
 }
 
 // ========== POPUP ==========
-async function openPopup(idx) {
+function openPopup(idx) {
   const ej = state.ejercicios[idx];
   if (!ej) return;
   state.vistos.add(idx);
   const card = document.getElementById('card-' + idx);
   if (card) card.querySelector('.card-badge').textContent = 'Visto';
 
-  const overlay = document.getElementById('popup-overlay');
-  const popup = document.getElementById('popup');
+  renderPopupContent(idx);
+}
 
-  // Show popup immediately with exercise + loading solution
+function renderPopupContent(idx) {
+  const ej = state.ejercicios[idx];
+  if (!ej) return;
+  const popup = document.getElementById('popup');
+  const overlay = document.getElementById('popup-overlay');
+
   popup.innerHTML = `
     <div class="popup-header">
       <span class="popup-num">#${idx+1}</span>
@@ -286,32 +317,67 @@ async function openPopup(idx) {
       </div>
       <div class="popup-section">
         <div class="popup-label">Resultado</div>
-        <div id="sol-result" class="sol-loading"><div class="spinner"></div>Cargando...</div>
+        <button class="result-reveal" id="result-btn"><span class="arr">&#9660;</span> Ver resultado</button>
+        <div id="result-content" class="result-hidden" style="display:none"></div>
       </div>
+    </div>
+    <div class="popup-nav">
+      <button id="popup-close-btn">Cerrar</button>
+      <button class="primary" id="popup-next-btn">Siguiente ejercicio &rarr;</button>
     </div>`;
 
   overlay.classList.add('open');
   try { renderMathInElement(popup, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
 
   document.getElementById('popup-close').addEventListener('click', closePopup);
+  document.getElementById('popup-close-btn').addEventListener('click', closePopup);
 
-  // Fetch and show result immediately
-  try {
-    const sol = await fetchSolution(ej.id);
-    const resultDiv = document.getElementById('sol-result');
-    if (sol.s && sol.s.length > 0) {
-      resultDiv.className = 'popup-exercise';
-      resultDiv.innerHTML = `$$${sol.s[sol.s.length - 1][0]}$$`;
-      try { renderMathInElement(resultDiv, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
-    } else {
-      resultDiv.className = '';
-      resultDiv.textContent = 'Sin resultado disponible.';
+  // Result reveal
+  const resultBtn = document.getElementById('result-btn');
+  const resultContent = document.getElementById('result-content');
+  let resultShown = false;
+
+  resultBtn.addEventListener('click', async () => {
+    if (resultShown) {
+      resultContent.style.display = 'none';
+      resultBtn.classList.remove('open');
+      resultBtn.innerHTML = '<span class="arr">&#9660;</span> Ver resultado';
+      resultShown = false;
+      return;
     }
-  } catch(err) {
-    const resultDiv = document.getElementById('sol-result');
-    resultDiv.className = '';
-    resultDiv.textContent = 'Error al cargar el resultado.';
-  }
+    resultBtn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px"></div> Cargando...';
+    try {
+      const sol = await fetchSolution(ej.id);
+      if (sol.s && sol.s.length > 0) {
+        resultContent.className = 'popup-exercise';
+        resultContent.innerHTML = `$$${sol.s[sol.s.length - 1][0]}$$`;
+        resultContent.style.display = '';
+        try { renderMathInElement(resultContent, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
+      } else {
+        resultContent.className = '';
+        resultContent.textContent = 'Sin resultado.';
+        resultContent.style.display = '';
+      }
+      resultBtn.classList.add('open');
+      resultBtn.innerHTML = '<span class="arr">&#9660;</span> Ocultar resultado';
+      resultShown = true;
+    } catch(err) {
+      resultContent.className = '';
+      resultContent.textContent = 'Error al cargar el resultado.';
+      resultContent.style.display = '';
+      resultBtn.innerHTML = 'Reintentar';
+    }
+  });
+
+  // Next exercise
+  document.getElementById('popup-next-btn').addEventListener('click', () => {
+    const nextIdx = pickRandomUnseen();
+    if (nextIdx !== null) {
+      openPopup(nextIdx);
+      const c = document.getElementById('card-' + nextIdx);
+      if (c) c.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
 
   document.getElementById('contador').textContent = `${state.vistos.size} / ${state.ejercicios.length}`;
 }
@@ -321,13 +387,19 @@ document.getElementById('popup-overlay').addEventListener('click', e => { if (e.
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
 
 // ========== CONTROLS ==========
-function randomCard() {
+function pickRandomUnseen() {
   const unseen = state.ejercicios.map((_, i) => i).filter(i => !state.vistos.has(i));
   const pool = unseen.length ? unseen : state.ejercicios.map((_, i) => i);
-  const idx = pool[Math.floor(Math.random() * pool.length)];
+  if (!pool.length) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function randomCard() {
+  const idx = pickRandomUnseen();
+  if (idx === null) return;
   openPopup(idx);
   const card = document.getElementById('card-' + idx);
-  if (card) card.scrollIntoView({ behavior:'smooth', block:'center' });
+  if (card) card.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 document.getElementById('btn-aleatorio').addEventListener('click', randomCard);
