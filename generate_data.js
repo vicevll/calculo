@@ -7,13 +7,18 @@ const path = require('path');
 
 const TEMAS = ['derivadas', 'integrales', 'limites'];
 const DIFS = ['facilito', 'dificilito', 'extremo'];
-const PER_SECTION = 200;
+const PER_DIFF = {
+  derivadas: 300,
+  integrales: 234,
+  limites: 400
+};
 
 const all = [];
 
 for (const tema of TEMAS) {
   for (const diff of DIFS) {
-    const pool = generatePool(tema, diff, PER_SECTION);
+    const count = PER_DIFF[tema];
+    const pool = generatePool(tema, diff, count);
     for (const preview of pool) {
       const sol = getSolution(preview.id);
       if (sol) {
