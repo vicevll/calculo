@@ -52,7 +52,7 @@ aside button.diff .dot.medio{background:var(--orange)}
 aside button.diff .dot.dificil{background:var(--red)}
 
 #grid-area{flex:1;overflow-y:auto;padding:24px 28px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:12px;padding-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:12px;padding-bottom:80px}
 .card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;transition:border-color var(--transition),background var(--transition),box-shadow var(--transition);display:flex;flex-direction:column;min-height:200px;position:relative;overflow:hidden}
 .card:hover{border-color:var(--accent);background:var(--bg4);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
 .card-preview{padding:22px 20px 18px;flex-shrink:0;display:flex;flex-direction:column;height:100%}
@@ -62,6 +62,11 @@ aside button.diff .dot.dificil{background:var(--red)}
 .card .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-shrink:0}
 .card .card-badge{font-size:.65rem;color:var(--text3);padding:3px 8px;border-radius:99px;background:var(--bg4)}
 .card .card-hint{font-size:.68rem;color:var(--text3)}
+
+/* Sentinel for infinite scroll */
+#sentinel{height:1px;width:100%;margin-top:-1px}
+.load-more{display:flex;align-items:center;justify-content:center;padding:28px;color:var(--text3);gap:10px;font-size:.85rem}
+.load-more .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 
 /* Loading */
 .loading{display:flex;align-items:center;justify-content:center;height:60vh;color:var(--text3);gap:12px}
@@ -236,7 +241,7 @@ limites: [
 };
 
 // ========== STATE ==========
-const state = { tema:'derivadas', dificultad:'facilito', ejercicios:[], vistos:new Set(), metodoTema:'derivadas', loading:false };
+const state = { tema:'derivadas', dificultad:'facilito', pool:[], ejercicios:[], loadCount:100, vistos:new Set(), metodoTema:'derivadas', loading:false };
 
 // ========== API CALLS ==========
 async function fetchExercises(tema, dificultad, count=200) {
@@ -257,19 +262,41 @@ async function loadGrid() {
   const area = document.getElementById('grid-area');
   area.innerHTML = '<div class="loading"><div class="spinner"></div>Cargando ejercicios...</div>';
   try {
-    state.ejercicios = await fetchExercises(state.tema, state.dificultad);
+    state.pool = await fetchExercises(state.tema, state.dificultad, 9999);
+    state.loadCount = Math.min(100, state.pool.length);
+    state.ejercicios = state.pool.slice(0, state.loadCount);
     state.vistos = new Set();
     renderGrid();
   } catch(e) {
-    area.innerHTML = '<div class="loading">Error de conexion con el backend. Asegurate de que el servidor esta corriendo.</div>';
+    area.innerHTML = '<div class="loading">Error de conexion con el backend.</div>';
   }
   state.loading = false;
+}
+
+function loadMore() {
+  const prev = state.loadCount;
+  state.loadCount = Math.min(prev + 100, state.pool.length);
+  if (state.loadCount === prev) return;
+  state.ejercicios = state.pool.slice(0, state.loadCount);
+  renderGrid();
+}
+
+function setupSentinel() {
+  const sentinel = document.getElementById('sentinel');
+  if (!sentinel) return;
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !state.loading) {
+      loadMore();
+    }
+  }, { rootMargin: '200px' });
+  observer.observe(sentinel);
 }
 
 function renderGrid() {
   const area = document.getElementById('grid-area');
   const items = state.ejercicios;
   if (!items.length) { area.innerHTML = '<div class="loading">No hay ejercicios.</div>'; return; }
+  const hasMore = state.loadCount < state.pool.length;
   area.innerHTML = `<div class="grid" id="grid">${items.map((ej, i) => `
     <div class="card" data-idx="${i}" id="card-${i}">
       <div class="card-preview">
@@ -280,12 +307,15 @@ function renderGrid() {
           <span class="card-hint">Click para abrir</span>
         </div>
       </div>
-    </div>`).join('')}</div>`;
+    </div>`).join('')}
+    ${hasMore ? '<div class="load-more" id="load-more-indicator"><div class="spinner"></div>Cargando mas...</div>' : '<div class="load-more">'+state.pool.length+' ejercicios cargados</div>'}
+    <div id="sentinel"></div></div>`;
   try { renderMathInElement(area, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => openPopup(parseInt(card.dataset.idx)));
   });
   document.getElementById('contador').textContent = `${state.vistos.size} / ${items.length}`;
+  setupSentinel();
 }
 
 // ========== POPUP ==========
@@ -403,7 +433,7 @@ function randomCard() {
 }
 
 document.getElementById('btn-aleatorio').addEventListener('click', randomCard);
-document.getElementById('btn-reiniciar').addEventListener('click', () => { loadGrid(); toast('200 nuevos ejercicios'); });
+document.getElementById('btn-reiniciar').addEventListener('click', () => { loadGrid(); toast('Ejercicios reiniciados'); });
 
 // ========== METHODS ==========
 function renderMethods() {
