@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculo — 3500 ejercicios</title>
+<title>Ejercicicios del vixo</title>
 <link rel="icon" type="image/png" href="./favicon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,6 +54,8 @@ aside button.diff .dot.medio{background:var(--orange)}
 aside button.diff .dot.dificil{background:var(--red)}
 aside button.diff .dot.infi{background:var(--teal)}
 aside button.diff .dot.infi-h{background:var(--pink)}
+aside button.tema-btn{border-color:transparent!important;background:transparent!important;font-weight:600}
+aside button.tema-btn.active{border-color:var(--accent)!important;color:var(--accent)!important;background:var(--accent-dim)!important}
 
 #grid-area{flex:1;overflow-y:auto;padding:24px 28px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:12px;padding-bottom:80px}
@@ -169,11 +171,11 @@ aside button.diff .dot.infi-h{background:var(--pink)}
 <header>
   <div class="logo">calcu<span>lo</span></div>
   <nav>
-    <button data-tema="derivadas" class="active">Derivadas</button>
-    <button data-tema="integrales">Integrales</button>
-    <button data-tema="limites">Limites</button>
+    <button data-cat="calculo" class="active">Calculo</button>
+    <button data-cat="m1">M1</button>
+    <button data-cat="m2">M2</button>
     <span class="sep"></span>
-    <button data-tema="metodos" class="metodos-btn">Metodos</button>
+    <button data-cat="metodos" class="metodos-btn">Metodos</button>
   </nav>
   <div class="spacer"></div>
   <div class="controls" id="exercise-controls">
@@ -183,15 +185,7 @@ aside button.diff .dot.infi-h{background:var(--pink)}
   </div>
 </header>
 <main>
-  <aside id="sidebar">
-    <div class="section-label">Dificultad</div>
-    <button class="diff active" data-diff="facilito"><span class="dot facil"></span>Facil</button>
-    <button class="diff" data-diff="dificilito"><span class="dot medio"></span>Intermedio</button>
-    <button class="diff" data-diff="extremo"><span class="dot dificil"></span>Avanzado</button>
-    <div class="section-label infi-section-label" style="margin-top:14px;display:none">Limites al Infinito</div>
-    <button class="diff infi-diff" data-diff="infi-facil" style="display:none"><span class="dot infi"></span>Facil</button>
-    <button class="diff infi-diff" data-diff="infi-dificil" style="display:none"><span class="dot infi-h"></span>Dificil</button>
-  </aside>
+  <aside id="sidebar"></aside>
   <div id="grid-area"></div>
   <div id="methods-view"></div>
 </main>
@@ -221,30 +215,19 @@ async function loadAllData() {
 // ========== METHODS (static, no backend needed) ==========
 const methods = {
 derivadas: [
-  {title:"Regla de la Potencia", formula:"$$\\frac{d}{dx}[ax^n] = a \\cdot n \\cdot x^{n-1}$$", desc:"La base de todas las derivadas. El exponente multiplica al coeficiente y baja en 1.", eg:"$$f(x)=3x^4 \\;\\Rightarrow\\; f'(x)=12x^3$$"},
-  {title:"Regla del Producto", formula:"$$(u \\cdot v)' = u' \\cdot v + u \\cdot v'$$", desc:"Cuando hay dos funciones multiplicandose, derivamos la primera por la segunda sin derivar, mas la primera sin derivar por la segunda derivada.", eg:"$$f(x)=x^2\\sin x \\;\\Rightarrow\\; f'(x)=2x\\sin x + x^2\\cos x$$"},
-  {title:"Regla del Cociente", formula:"$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^2}$$", desc:"Para divisiones. Derivada del numerador por denominador, menos numerador por derivada del denominador, todo sobre denominador al cuadrado.", eg:"$$f(x)=\\frac{x}{x+1} \\;\\Rightarrow\\; f'(x)=\\frac{1}{(x+1)^2}$$"},
-  {title:"Regla de la Cadena", formula:"$$\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x)$$", desc:"Para funciones compuestas. Se deriva de afuera hacia adentro.", eg:"$$f(x)=\\sin(x^2) \\;\\Rightarrow\\; f'(x)=\\cos(x^2)\\cdot 2x$$"},
+  {title:"Regla de la Potencia", formula:"$$\\frac{d}{dx}[ax^n] = a \\cdot n \\cdot x^{n-1}$$", desc:"El exponente multiplica al coeficiente y baja en 1.", eg:"$$f(x)=3x^4 \\;\\Rightarrow\\; f'(x)=12x^3$$"},
+  {title:"Regla del Producto", formula:"$$(u \\cdot v)' = u' \\cdot v + u \\cdot v'$$", desc:"Derivamos la primera por la segunda sin derivar, mas la primera sin derivar por la segunda derivada.", eg:"$$f(x)=x^2\\sin x \\;\\Rightarrow\\; f'(x)=2x\\sin x + x^2\\cos x$$"},
+  {title:"Regla del Cociente", formula:"$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^2}$$", desc:"Derivada del numerador por denominador, menos numerador por derivada del denominador, todo sobre denominador al cuadrado.", eg:"$$f(x)=\\frac{x}{x+1} \\;\\Rightarrow\\; f'(x)=\\frac{1}{(x+1)^2}$$"},
+  {title:"Regla de la Cadena", formula:"$$\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x)$$", desc:"Se deriva de afuera hacia adentro.", eg:"$$f(x)=\\sin(x^2) \\;\\Rightarrow\\; f'(x)=\\cos(x^2)\\cdot 2x$$"},
   {title:"Derivada del Logaritmo", formula:"$$\\frac{d}{dx}[\\ln(u)] = \\frac{u'}{u}$$", desc:"La derivada del logaritmo natural es la derivada de lo de dentro dividida entre lo de dentro.", eg:"$$f(x)=\\ln(3x+2) \\;\\Rightarrow\\; f'(x)=\\frac{3}{3x+2}$$"},
-  {title:"Derivacion Implicita", formula:"$$\\frac{d}{dx}[y^n] = n y^{n-1} \\cdot \\frac{dy}{dx}$$", desc:"Cuando y depende de x pero no esta despejada.", eg:"$$x^2+y^2=25 \\;\\Rightarrow\\; \\frac{dy}{dx}=-\\frac{x}{y}$$"},
-  {title:"Derivacion Logaritmica", formula:"$$\\ln f(x) \\;\\Rightarrow\\; \\frac{f'(x)}{f(x)}$$", desc:"Para funciones del tipo f(x)^g(x).", eg:"$$f(x)=x^x \\;\\Rightarrow\\; f' = x^x(\\ln x + 1)$$"},
-  {title:"Derivada de la Funcion Inversa", formula:"$$\\frac{d}{dx}[f^{-1}(x)] = \\frac{1}{f'(f^{-1}(x))}$$", desc:"Hallar la derivada de la inversa sin despejarla.", eg:"$$y=\\arcsin x \\;\\Rightarrow\\; \\frac{dy}{dx}=\\frac{1}{\\sqrt{1-x^2}}$$"},
-  {title:"Funciones Hiperbolicas", formula:"$$\\frac{d}{dx}\\sinh x = \\cosh x,\\; \\frac{d}{dx}\\cosh x = \\sinh x$$", desc:"Derivadas similares a las trigonometricas pero sin cambios de signo.", eg:"$$f(x)=\\tanh x \\;\\Rightarrow\\; f'(x)=1-\\tanh^2 x$$"},
-  {title:"Regla de Leibniz", formula:"$$(uv)^{(n)} = \\sum_{k=0}^{n} \\binom{n}{k} u^{(n-k)} v^{(k)}$$", desc:"Generalizacion de la regla del producto para orden n. Patron del binomio de Newton.", eg:"$$f(x)=x^2 e^x \\;\\Rightarrow\\; f'''(x)=x^2 e^x + 6x e^x + 6 e^x$$"},
-  {title:"Formula de Faa di Bruno", formula:"$$\\frac{d^n}{dx^n}f(g(x)) = \\sum \\frac{n!}{k_1!\\cdots k_n!} f^{(k)}(g(x)) \\prod \\left(\\frac{g^{(j)}(x)}{j!}\\right)^{k_j}$$", desc:"Cadena de orden n. Usada en software simbolico y combinatoria.", eg:"Para n=2: f''(g(x))[g'(x)]^2 + f'(g(x))g''(x)"},
 ],
 integrales: [
-  {title:"Regla de la Potencia (inversa)", formula:"$$\\int ax^n\\,dx = a\\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1)$$", desc:"Sumamos 1 al exponente y dividimos entre el nuevo exponente.", eg:"$$\\int 4x^3\\,dx = x^4 + C$$"},
+  {title:"Regla de la Potencia", formula:"$$\\int ax^n\\,dx = a\\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1)$$", desc:"Sumamos 1 al exponente y dividimos entre el nuevo exponente.", eg:"$$\\int 4x^3\\,dx = x^4 + C$$"},
   {title:"Integral de 1/x", formula:"$$\\int \\frac{1}{x}\\,dx = \\ln|x| + C$$", desc:"Caso especial: no se puede usar la regla de potencia.", eg:"$$\\int \\frac{3}{x}\\,dx = 3\\ln|x| + C$$"},
   {title:"Sustitucion", formula:"$$\\int f(g(x)) \\cdot g'(x)\\,dx = \\int f(u)\\,du$$", desc:"Se busca una parte cuya derivada tambien aparezca.", eg:"$$\\int 2x(x^2+1)^3\\,dx = \\frac{(x^2+1)^4}{4}+C$$"},
   {title:"Integracion por Partes", formula:"$$\\int u\\,dv = uv - \\int v\\,du$$", desc:"Inversa de la regla del producto.", eg:"$$\\int x e^x\\,dx = e^x(x-1) + C$$"},
   {title:"Fracciones Parciales", formula:"$$\\frac{P(x)}{Q(x)} = \\frac{A}{x-a} + \\frac{B}{x-b} + \\cdots$$", desc:"Se factoriza el denominador y se descompone.", eg:"$$\\int\\frac{1}{x^2-1}dx = \\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right| + C$$"},
   {title:"Sustitucion Trigonometrica", formula:"$$\\sqrt{a^2-x^2} \\to x=a\\sin\\theta$$", desc:"Para integrales con raices cuadradas.", eg:"$$\\int\\frac{1}{\\sqrt{1-x^2}}\\,dx = \\arcsin x + C$$"},
-  {title:"Integrales Ciclicas", formula:"$$\\int e^{ax}\\sin(bx)\\,dx$$", desc:"Al aplicar partes dos veces, la integral reaparece.", eg:"$$\\int e^x\\sin x\\,dx = \\frac{e^x}{2}(\\sin x - \\cos x) + C$$"},
-  {title:"Metodo de Hermite-Ostrogradsky", formula:"$$\\int \\frac{P(x)}{Q(x)}dx = \\frac{P_1(x)}{Q_1(x)} + \\int \\frac{P_2(x)}{Q_2(x)}dx$$", desc:"Integra racionales SIN fracciones parciales. Separa parte racional de logaritmica.", eg:"$$\\int\\frac{1}{(x^2+1)^2}dx = \\frac{x}{2(x^2+1)} + \\frac{1}{2}\\arctan x + C$$"},
-  {title:"Sustitucion de Weierstrass", formula:"$$t = \\tan\\frac{x}{2},\\; \\sin x = \\frac{2t}{1+t^2},\\; \\cos x = \\frac{1-t^2}{1+t^2}$$", desc:"Convierte cualquier racional trigonometrica en racional de t.", eg:"$$\\int\\frac{1}{1+\\cos x}dx = \\tan\\frac{x}{2} + C$$"},
-  {title:"Formulas de Reduccion", formula:"$$\\int \\sin^n x\\,dx = -\\frac{1}{n}\\sin^{n-1}x\\cos x + \\frac{n-1}{n}\\int \\sin^{n-2}x\\,dx$$", desc:"Reducen potencias paso a paso.", eg:"$$\\int \\sin^4 x\\,dx = -\\frac{1}{4}\\sin^3 x\\cos x + \\frac{3}{4}\\int\\sin^2 x\\,dx$$"},
-  {title:"Coeficientes Indeterminados", formula:"$$\\int P(x)e^{ax}\\sin(bx)dx = e^{ax}(Q(x)\\sin bx + R(x)\\cos bx)$$", desc:"Para polinomio * exponencial * trigonometrica. Se propone solucion y se deriva.", eg:"$$\\int x e^x\\sin x\\,dx = e^x\\left(\\frac{x}{2}(\\sin x-\\cos x) + \\frac{1}{2}\\cos x\\right) + C$$"},
 ],
 limites: [
   {title:"Sustitucion Directa", formula:"$$\\lim_{x\\to a} f(x) = f(a)$$", desc:"Si la funcion es continua, evaluamos directamente.", eg:"$$\\lim_{x\\to 2}(x^2+3) = 7$$"},
@@ -253,17 +236,65 @@ limites: [
   {title:"Limites al Infinito", formula:"$$\\lim_{x\\to\\infty}\\frac{a_nx^n}{b_mx^m}$$", desc:"n=m: a_n/b_m. n<m: 0. n>m: infinito.", eg:"$$\\lim_{x\\to\\infty}\\frac{2x^3}{3x^3} = \\frac{2}{3}$$"},
   {title:"Regla de L'Hopital", formula:"$$\\lim\\frac{f(x)}{g(x)} = \\lim\\frac{f'(x)}{g'(x)}$$", desc:"Para 0/0 o inf/inf. Derivar numerador y denominador por separado.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin x}{x} = 1$$"},
   {title:"Limites Trigonometricos Notables", formula:"$$\\lim_{x\\to 0}\\frac{\\sin x}{x}=1,\\;\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}=\\frac{1}{2}$$", desc:"Limites fundamentales que conviene memorizar.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin(3x)}{x} = 3$$"},
-  {title:"El numero e", formula:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{1}{x}\\right)^x = e$$", desc:"Define e. Forma general: lim(1+a/x)^(bx) = e^(ab).", eg:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{3}{x}\\right)^{2x} = e^6$$"},
-  {title:"Indeterminacion 0 * inf", formula:"$$\\lim_{x\\to 0^+} x\\ln x$$", desc:"Se reescribe como cociente para aplicar L'Hopital.", eg:"$$\\lim_{x\\to 0^+} x\\ln x = 0$$"},
-  {title:"Series de Taylor", formula:"$$e^x = 1 + x + \\frac{x^2}{2!} + \\cdots,\\; \\sin x = x - \\frac{x^3}{3!} + \\cdots$$", desc:"Sustituir por primeros terminos de Taylor. Util cuando L'Hopital es muy largo.", eg:"$$\\lim_{x\\to 0}\\frac{x-\\sin x}{x^3} = \\frac{1}{6}$$"},
-  {title:"Infinitesimos Equivalentes", formula:"$$\\sin x \\sim x,\\; \\tan x \\sim x,\\; 1-\\cos x \\sim \\frac{x^2}{2},\\; \\ln(1+x)\\sim x$$", desc:"Reemplazar factores por infinitesimos equivalentes. Solo en productos/cocientes.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin(2x)\\cdot\\ln(1+x)}{x\\cdot\\tan x} = 2$$"},
-  {title:"Criterio de Stolz-Cesaro", formula:"$$\\lim\\frac{a_n}{b_n} = \\lim\\frac{a_{n+1}-a_n}{b_{n+1}-b_n}$$", desc:"L'Hopital discreto para sucesiones.", eg:"$$\\lim\\frac{1^2+2^2+\\cdots+n^2}{n^3} = \\frac{1}{3}$$"},
+  {title:"El numero e", formula:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{1}{x}\\right)^x = e$$", desc:"Define e. lim(1+a/x)^(bx) = e^(ab).", eg:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{3}{x}\\right)^{2x} = e^6$$"},
   {title:"Teorema del Sandwich", formula:"$$g(x) \\leq f(x) \\leq h(x),\\; \\lim g = \\lim h = L \\Rightarrow \\lim f = L$$", desc:"Funcion atrapada entre dos que tienden al mismo limite.", eg:"$$\\lim_{x\\to 0} x^2\\sin(1/x) = 0$$"},
-]
+],
+sistemas: [
+  {title:"Metodo de Sustitucion", formula:"$$\\begin{cases} ax+by=c \\\\ dx+ey=f \\end{cases}$$", desc:"Despejar una variable de una ecuacion y sustituir en la otra.", eg:"$$\\begin{cases} x+y=5 \\\\ 2x-y=1 \\end{cases} \\;\\Rightarrow\\; x=2,\\;y=3$$"},
+  {title:"Metodo de Reduccion", formula:"$$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$$", desc:"Multiplicar ecuaciones para igualar coeficientes y eliminar una variable.", eg:"$$\\begin{cases} 2x+y=7 \\\\ x-y=2 \\end{cases} \\;\\Rightarrow\\; x=3,\\;y=1$$"},
+  {title:"Metodo de Igualacion", formula:"$$y = m_1x + n_1 = m_2x + n_2$$", desc:"Despejar la misma variable en ambas ecuaciones e igualar.", eg:"$$\\begin{cases} y=2x+1 \\\\ y=-x+7 \\end{cases} \\;\\Rightarrow\\; x=2,\\;y=5$$"},
+  {title:"Metodo de Cramer", formula:"$$x=\\frac{\\det\\begin{pmatrix}c & b\\\\ f & e\\end{pmatrix}}{\\det\\begin{pmatrix}a & b\\\\ d & e\\end{pmatrix}}$$", desc:"Usa determinantes para resolver sistemas nxn.", eg:"$$\\begin{cases} 2x+y=5 \\\\ x-y=1 \\end{cases} \\;\\Rightarrow\\; x=2,\\;y=1$$"},
+],
+cuadraticas: [
+  {title:"Formula General", formula:"$$x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$$", desc:"Funciona siempre. Discriminante: b^2-4ac.", eg:"$$x^2-5x+6=0 \\;\\Rightarrow\\; x=2,\\;x=3$$"},
+  {title:"Factorizacion", formula:"$$(x-r_1)(x-r_2) = x^2-(r_1+r_2)x + r_1r_2$$", desc:"Buscar dos numeros que sumen -b y multipliquen c.", eg:"$$x^2-7x+12 = (x-3)(x-4) = 0$$"},
+  {title:"Completar el Trinomio", formula:"$$x^2+bx = (x+\\frac{b}{2})^2 - \\frac{b^2}{4}$$", desc:"Convertir a cuadrado perfecto sumando y restando.", eg:"$$x^2+6x+5 = (x+3)^2 - 4 = 0 \\;\\Rightarrow\\; x=-1,\\;x=-5$$"},
+  {title:"Discriminante", formula:"$$\\Delta = b^2 - 4ac$$", desc:"Delta > 0: 2 soluciones. Delta = 0: 1 doble. Delta < 0: sin solucion real.", eg:"$$2x^2-4x+2=0,\\; \\Delta=0 \\;\\Rightarrow\\; x=1\\;\\text{(doble)}$$"},
+],
+logaritmos: [
+  {title:"Definicion", formula:"$$\\log_a x = b \\;\\Leftrightarrow\\; a^b = x$$", desc:"El logaritmo es el exponente al que hay que elevar la base para obtener el numero.", eg:"$$\\log_2 8 = 3 \\;\\Leftrightarrow\\; 2^3 = 8$$"},
+  {title:"Propiedades basicas", formula:"$$\\log_a(xy)=\\log_a x+\\log_a y,\\; \\log_a(x/y)=\\log_a x-\\log_a y$$", desc:"Producto dentro se convierte en suma. Division en resta.", eg:"$$\\log_2(8\\cdot4) = \\log_2 8 + \\log_2 4 = 3+2=5$$"},
+  {title:"Potencia", formula:"$$\\log_a(x^n) = n\\log_a x$$", desc:"El exponente sale multiplicando al logaritmo.", eg:"$$\\log_3(9^2) = 2\\log_3 9 = 2\\cdot2 = 4$$"},
+  {title:"Cambio de base", formula:"$$\\log_a x = \\frac{\\log_b x}{\\log_b a}$$", desc:"Permite calcular cualquier logaritmo usando una base conocida.", eg:"$$\\log_5 25 = \\frac{\\ln 25}{\\ln 5} = 2$$"},
+  {title:"Logaritmo natural", formula:"$$\\ln e = 1,\\; \\ln 1 = 0,\\; e^{\\ln x} = x$$", desc:"ln = log_e. Es la funcion inversa de la exponencial.", eg:"$$\\ln(e^3) = 3$$"},
+],
+funciones: [
+  {title:"Ceros de exponencial", formula:"$$e^x = a \\;\\Rightarrow\\; x = \\ln a \\;(a>0)$$", desc:"Aplicar logaritmo natural a ambos lados.", eg:"$$e^x = 5 \\;\\Rightarrow\\; x = \\ln 5$$"},
+  {title:"Ceros de logaritmica", formula:"$$\\ln x = a \\;\\Rightarrow\\; x = e^a$$", desc:"Aplicar exponencial a ambos lados.", eg:"$$\\ln x = 2 \\;\\Rightarrow\\; x = e^2$$"},
+  {title:"Crecimiento exponencial", formula:"$$a \\cdot e^x - b = 0 \\;\\Rightarrow\\; x = \\ln(b/a)$$", desc:"Despejar e^x primero, luego aplicar ln.", eg:"$$3e^x - 9 = 0 \\;\\Rightarrow\\; x = \\ln 3$$"},
+  {title:"Dominio y rango", formula:"$$f(x)=\\log_a x \\to (0,\\infty),\\; f(x)=a^x \\to \\mathbb{R}$$", desc:"El logaritmo solo acepta x>0. La exponencial todo R.", eg:"$$f(x)=\\ln(x-2),\\; \\text{Dom}: x>2$$"},
+],
 };
 
 // ========== STATE ==========
-const state = { tema:'derivadas', dificultad:'facilito', pool:[], ejercicios:[], loadCount:100, vistos:new Set(), metodoTema:'derivadas', loading:false };
+const CATS = {
+  calculo: { 
+    label: 'Calculo',
+    temas: {
+      derivadas:  { label:'Derivadas',  difs:['facilito','dificilito','extremo'] },
+      integrales: { label:'Integrales', difs:['facilito','dificilito','extremo'] },
+      limites:    { label:'Limites',    difs:['facilito','dificilito','extremo','infi-facil','infi-dificil'] }
+    }
+  },
+  m1: { 
+    label: 'M1',
+    temas: {
+      sistemas:    { label:'Sistemas de ecuaciones 2x2', difs:['facilito','extremo'] },
+      cuadraticas: { label:'Ecuaciones de segundo grado', difs:['extremo'] }
+    }
+  },
+  m2: { 
+    label: 'M2',
+    temas: {
+      logaritmos: { label:'Logaritmos', difs:['dificilito','extremo'] },
+      funciones:  { label:'Funcion exp/log', difs:['dificilito'] }
+    }
+  }
+};
+const DIF_LABELS = { facilito:'Facil', dificilito:'Intermedio', extremo:'Avanzado', 'infi-facil':'Infinito Facil', 'infi-dificil':'Infinito Dificil' };
+const DIF_DOTS = { facilito:'facil', dificilito:'medio', extremo:'dificil', 'infi-facil':'infi', 'infi-dificil':'infi-h' };
+
+const state = { categoria:'calculo', tema:'derivadas', dificultad:'facilito', pool:[], ejercicios:[], loadCount:100, vistos:new Set(), metodoTema:'derivadas', loading:false };
 
 // ========== DATA ACCESS (static, no backend) ==========
 function shuffle(arr) {
@@ -463,14 +494,16 @@ document.getElementById('btn-reiniciar').addEventListener('click', () => { loadG
 function renderMethods() {
   const mv = document.getElementById('methods-view');
   const m = methods[state.metodoTema];
+  const methodTabs = ['derivadas','integrales','limites','sistemas','cuadraticas','logaritmos','funciones'];
+  const methodLabels = {derivadas:'Derivadas',integrales:'Integrales',limites:'Limites',sistemas:'Sistemas',cuadraticas:'Cuadraticas',logaritmos:'Logaritmos',funciones:'Funciones'};
   mv.innerHTML = `
     <div class="methods-header">
-      <h2>Metodos de ${state.metodoTema.charAt(0).toUpperCase()+state.metodoTema.slice(1)}</h2>
+      <h2>Metodos</h2>
       <p>Guia de referencia con formulas, explicaciones y ejemplos.</p>
     </div>
     <div class="method-tabs">
-      ${['derivadas','integrales','limites'].map(t => `
-        <button data-mt="${t}" class="${t===state.metodoTema?'active':''}">${t.charAt(0).toUpperCase()+t.slice(1)}</button>
+      ${methodTabs.map(t => `
+        <button data-mt="${t}" class="${t===state.metodoTema?'active':''}">${methodLabels[t]}</button>
       `).join('')}
     </div>
     ${m.map(sec => `
@@ -487,32 +520,64 @@ function renderMethods() {
   });
 }
 
+// ========== SIDEBAR ==========
+function renderSidebar() {
+  const aside = document.getElementById('sidebar');
+  const cat = CATS[state.categoria];
+  if (!cat) { aside.innerHTML = ''; return; }
+  let html = '<div class="section-label">Tema</div>';
+  for (const [key, t] of Object.entries(cat.temas)) {
+    html += `<button class="diff tema-btn" data-tema="${key}">${t.label}</button>`;
+  }
+  html += '<div class="section-label" style="margin-top:14px">Dificultad</div>';
+  const temaCfg = cat.temas[state.tema];
+  if (temaCfg) {
+    for (const d of temaCfg.difs) {
+      const dotClass = DIF_DOTS[d] || 'facil';
+      html += `<button class="diff" data-diff="${d}"><span class="dot ${dotClass}"></span>${DIF_LABELS[d] || d}</button>`;
+    }
+  }
+  aside.innerHTML = html;
+  aside.querySelectorAll('button.tema-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.tema = btn.dataset.tema;
+      state.dificultad = (cat.temas[state.tema] && cat.temas[state.tema].difs[0]) || 'facilito';
+      renderSidebar();
+      loadGrid();
+    });
+  });
+  aside.querySelectorAll('button.diff:not(.tema-btn)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.dificultad = btn.dataset.diff;
+      renderSidebar();
+      loadGrid();
+    });
+  });
+  aside.querySelectorAll('button.tema-btn').forEach(b => b.classList.toggle('active', b.dataset.tema === state.tema));
+  aside.querySelectorAll('button.diff:not(.tema-btn)').forEach(b => b.classList.toggle('active', b.dataset.diff === state.dificultad));
+}
+
 // ========== NAVIGATION ==========
-function switchView(v) {
+function switchView(cat) {
   const grid = document.getElementById('grid-area'), mv = document.getElementById('methods-view');
   const sidebar = document.getElementById('sidebar'), ctrls = document.getElementById('exercise-controls');
-  const infiLabels = document.querySelectorAll('.infi-section-label');
-  const infiBtns = document.querySelectorAll('.infi-diff');
-  if (v === 'metodos') {
+  if (cat === 'metodos') {
     grid.style.display = 'none'; mv.style.display = 'block'; mv.classList.add('active');
     sidebar.classList.add('hide'); ctrls.classList.add('hide');
     renderMethods();
   } else {
     grid.style.display = ''; mv.style.display = 'none'; mv.classList.remove('active');
     sidebar.classList.remove('hide'); ctrls.classList.remove('hide');
-    state.tema = v;
-    // Mostrar/ocultar seccion de limites al infinito
-    const showInfi = (v === 'limites');
-    infiLabels.forEach(el => el.style.display = showInfi ? '' : 'none');
-    infiBtns.forEach(el => el.style.display = showInfi ? '' : 'none');
-    // Si se habia seleccionado una dificultad infinito, volver a facilito
-    if (state.dificultad === 'infi-facil' || state.dificultad === 'infi-dificil') {
-      if (v !== 'limites') {
-        state.dificultad = 'facilito';
-        updateDiffButtons();
+    state.categoria = cat;
+    const catCfg = CATS[cat];
+    if (catCfg) {
+      const firstTema = Object.keys(catCfg.temas)[0];
+      if (firstTema !== state.tema) {
+        state.tema = firstTema;
+        state.dificultad = catCfg.temas[firstTema].difs[0] || 'facilito';
       }
     }
-    updateDiffButtons();
+    renderSidebar();
     loadGrid();
   }
 }
@@ -521,28 +586,14 @@ document.querySelectorAll('nav button').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    switchView(btn.dataset.tema);
+    switchView(btn.dataset.cat);
   });
 });
-
-document.querySelectorAll('aside button.diff').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('aside button.diff').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.dificultad = btn.dataset.diff;
-    loadGrid();
-  });
-});
-
-function updateDiffButtons() {
-  document.querySelectorAll('aside button.diff').forEach(b => {
-    b.classList.toggle('active', b.dataset.diff === state.dificultad);
-  });
-}
 
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
 
 // ========== START ==========
+renderSidebar();
 loadGrid();
 </script>
 </body>

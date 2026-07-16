@@ -126,8 +126,47 @@ liH7:()=>{let a=R.int(2,6);return{e:`$$\\lim_{x\\to \\infty} \\left(\\sqrt{x^2+$
 liH8:()=>{let a=R.int(2,6);return{e:`$$\\lim_{x\\to \\infty} \\frac{\\sqrt{x^2+${a}}}{\\sqrt[3]{x^3+1}}$$`,s:[["Dividimos numerador y denominador entre x.",`\\frac{\\sqrt{1+${a}/x^2}}{\\sqrt[3]{1+1/x^3}}`],["Cuando x->inf, "+a+"/x^2->0 y 1/x^3->0.","1"]]}},
 liH9:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\left(\\frac{x+${a}}{x-${a}}\\right)^{x}$$`,s:[["Reescribimos la base: 1 + 2a/(x-a).","[(1+2a/(x-a))^{(x-a)/(2a)}]^{2a}"],["El interior -> e.",`e^{${2*a}}`]]}},
 liH10:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\frac{\\ln(x^{${a}}+1)}{\\ln x}$$`,s:[["Ambos -> inf. Aplicamos L'Hopital.",`\\frac{${a}x^{${a-1}}/(x^{${a}}+1)}{1/x} = \\frac{${a}x^{${a}}}{x^{${a}}+1}`],["Cuando x->inf, esta fraccion tiende a...",`${a}`]]}},
-};
 
+// --- SISTEMAS DE ECUACIONES 2x2 (FACIL) ---
+seF1:()=>{let x=R.int(-5,5),y=R.int(-5,5);let a=x+y,b=x-y;return{e:`$$\\begin{cases} x + y = ${a} \\\\ x - y = ${b} \\end{cases}$$`,s:[["Sumamos las ecuaciones: 2x = "+(a+b)+" ⇒ x = "+x+".",`x = ${x}`],["Restamos: 2y = "+(a-b)+" ⇒ y = "+y+".",`y = ${y}`]]}},
+seF2:()=>{let x=R.int(-5,5),y=R.int(-5,5),c=R.int(2,5);let a=x+y,b=c*x+y;return{e:`$$\\begin{cases} x + y = ${a} \\\\ ${c}x + y = ${b} \\end{cases}$$`,s:[["Restamos la 1ra de la 2da: "+(c-1)+"x = "+(b-a)+" ⇒ x = "+x+".",`x = ${x}`],["Sustituimos en la 1ra: "+x+" + y = "+a+" ⇒ y = "+y+".",`y = ${y}`]]}},
+seF3:()=>{let x=R.int(-5,5),y=R.int(-5,5),c=R.int(2,5);let a=c*x+y,b=x-y;return{e:`$$\\begin{cases} ${c}x + y = ${a} \\\\ x - y = ${b} \\end{cases}$$`,s:[["Sumamos: "+(c+1)+"x = "+(a+b)+" ⇒ x = "+x+".",`x = ${x}`],["Sustituimos: "+x+" - y = "+b+" ⇒ y = "+y+".",`y = ${y}`]]}},
+seF4:()=>{let x=R.int(-4,4),y=R.int(-4,4);let a=2*x+y,b=x+2*y;return{e:`$$\\begin{cases} 2x + y = ${a} \\\\ x + 2y = ${b} \\end{cases}$$`,s:[["De la 2da: x = "+(b)+" - 2y. Sustituimos en la 1ra.",`2(${b} - 2y) + y = ${a}`],["Resolviendo: "+(2*b)+" - 3y = "+a+" ⇒ y = "+y+".",`y = ${y}`],["Sustituimos: x = "+(b)+" - 2("+y+") = "+x+".",`x = ${x}`]]}},
+seF5:()=>{let x=R.int(-4,4),y=R.int(-4,4);let a=x+2*y,b=2*x-y;return{e:`$$\\begin{cases} x + 2y = ${a} \\\\ 2x - y = ${b} \\end{cases}$$`,s:[["Despejamos x de la 1ra: x = "+a+" - 2y.",`2(${a} - 2y) - y = ${b}`],["Resolviendo: "+(2*a)+" - 5y = "+b+" ⇒ y = "+y+".",`y = ${y}`],["Sustituimos: x = "+a+" - 2("+y+") = "+x+".",`x = ${x}`]]}},
+
+// --- SISTEMAS DE ECUACIONES 2x2 (DIFICIL) ---
+seH1:()=>{let x=R.int(-5,5),y=R.int(-5,5),a=R.int(2,4),b=R.int(2,4),c=R.int(2,4),d=R.int(2,4);let p=a*x+b*y,q=c*x+d*y;return{e:`$$\\begin{cases} ${a}x + ${b}y = ${p} \\\\ ${c}x + ${d}y = ${q} \\end{cases}$$`,s:[["Multiplicamos 1ra por "+d+" y 2da por "+b+":",`${a*d}x + ${b*d}y = ${p*d} \\\\ ${c*b}x + ${b*d}y = ${q*b}`],["Restamos: "+(a*d-c*b)+"x = "+(p*d-q*b)+" ⇒ x = "+x+".",`x = ${x}`],["Sustituimos en 1ra: "+a+"("+x+") + "+b+"y = "+p+" ⇒ y = "+y+".",`y = ${y}`]]}},
+seH2:()=>{let x=R.int(-5,5),y=R.int(-5,5);let a=R.int(2,4),b=R.int(2,4),c=R.int(-4,-1),d=R.int(2,5);let p=a*x+b*y,q=c*x+d*y;return{e:`$$\\begin{cases} ${a}x + ${b}y = ${p} \\\\ ${c}x + ${d}y = ${q} \\end{cases}$$`,s:[["Eliminamos x: multiplicamos 1ra por "+(c)+" y 2da por "+a+".",`${a*c}x + ${b*c}y = ${p*c} \\\\ ${a*c}x + ${a*d}y = ${q*a}`],["Restamos: "+(b*c-a*d)+"y = "+(p*c-q*a)+" ⇒ y = "+y+".",`y = ${y}`],["Sustituimos: x = "+x+".",`x = ${x}`]]}},
+seH3:()=>{let x=R.int(-4,4),y=R.int(-4,4);let a=R.int(3,6),p=a*x+y;return{e:`$$\\begin{cases} ${a}x + y = ${p} \\\\ \\frac{x}{2} + \\frac{y}{3} = ${(x/2+y/3).toFixed(1)} \\end{cases}$$`,s:[["Multiplicamos la 2da por 6 para eliminar fracciones: 3x + 2y = "+(3*x+2*y)+".",`\\begin{cases} ${a}x + y = ${p} \\\\ 3x + 2y = ${3*x+2*y} \\end{cases}`],["Multiplicamos 1ra por 2: "+(2*a)+"x + 2y = "+(2*p)+". Restamos 2da.",(2*a-3)+"x = "+(2*p-3*x-2*y)+" ⇒ x = "+x+"."],["Sustituimos: y = "+y+".",`x = ${x},\\; y = ${y}`]]}},
+seH4:()=>{let x=R.int(-4,4),y=R.int(-4,4);let a=R.int(2,5),b=R.int(2,5);let p=2*x+a*y,q=b*x-3*y;return{e:`$$\\begin{cases} 2x + ${a}y = ${p} \\\\ ${b}x - 3y = ${q} \\end{cases}$$`,s:[["Multiplicamos 1ra por 3 y 2da por "+(a)+":",`6x + ${3*a}y = ${3*p} \\\\ ${3*b}x - ${3*a}y = ${3*q}`],["Sumamos: "+(6+3*b)+"x = "+(3*p+3*q)+" ⇒ x = "+x+".",`x = ${x}`],["Sustituimos: y = "+y+".",`y = ${y}`]]}},
+seH5:()=>{let x=R.int(-5,5),y=R.int(-5,5);let a=R.int(2,4),b=R.int(2,4),c=R.int(2,4),d=R.int(2,4);let p=a*x-b*y,q=c*x+d*y;return{e:`$$\\begin{cases} ${a}x - ${b}y = ${p} \\\\ ${c}x + ${d}y = ${q} \\end{cases}$$`,s:[["Multiplicamos 1ra por "+d+" y 2da por "+b+":",`${a*d}x - ${b*d}y = ${p*d} \\\\ ${c*b}x + ${b*d}y = ${q*b}`],["Sumamos: "+(a*d+c*b)+"x = "+(p*d+q*b)+" ⇒ x = "+x+".",`x = ${x}`],["Sustituimos: y = "+y+".",`y = ${y}`]]}},
+
+// --- ECUACIONES DE SEGUNDO GRADO (DIFICIL) ---
+cuH1:()=>{let r1=R.int(-6,6);if(!r1)r1=1;let r2=R.int(-6,6);while(!r2||r1===r2)r2=R.int(-6,6);let s=r1+r2,p=r1*r2;return{e:`$$x^2 ${sign(-s)}x ${sign(p)} = 0$$`,s:[["Usamos la formula general: x = (-b ± √(b^2-4ac))/(2a).",`a=1,\\; b=${-s},\\; c=${p}`],["Discriminante: Δ = "+(s*s-4*p)+" = "+((r1-r2)*(r1-r2))+".",`\\sqrt{\\Delta} = ${Math.abs(r1-r2)}`],["Raices: x = "+r1+", x = "+r2+"."]]}},
+cuH2:()=>{let r1=R.int(-5,5);if(!r1)r1=1;let r2=R.int(-5,5);while(!r2||r1===r2)r2=R.int(-5,5);let s=r1+r2,p=r1*r2,a=R.int(2,3);if(a===2){let c=R.int(2,3);return{e:`$$${a}x^2 ${sign(-s*a)}x ${sign(p*a)} = 0$$`,s:[["Dividimos entre "+a+": x^2 "+(-s)+"x + "+p+" = 0.",`(x ${-r1>=0?'-'+r1:'+'+Math.abs(r1)})(x ${-r2>=0?'-'+r2:'+'+Math.abs(r2)}) = 0`],["Raices: x = "+r1+", x = "+r2+"."]]}}let c=R.int(1,3);return{e:`$$${a}x^2 ${sign(-s*a)}x ${sign(p*a)} = 0$$`,s:[["Dividimos entre "+a+": x^2 "+(-s)+"x + "+p+" = 0.",`(x ${-r1>=0?'-'+r1:'+'+Math.abs(r1)})(x ${-r2>=0?'-'+r2:'+'+Math.abs(r2)}) = 0`],["Raices: x = "+r1+", x = "+r2+"."]]}},
+cuH3:()=>{let r1=R.int(-6,6);if(!r1)r1=1;let r2=R.int(-6,6);while(!r2||r1===r2)r2=R.int(-6,6);let s=r1+r2,p=r1*r2,a=R.cs();return{e:`$$${a.n}x^2 ${sign(-s*a.v)}x ${sign(p*a.v)} = 0$$`,s:[["Factorizamos: "+a.n+"(x^2 "+(-s)+"x "+sign(p)+") = 0.",`${a.n}(x ${-r1>=0?'-'+r1:'+'+Math.abs(r1)})(x ${-r2>=0?'-'+r2:'+'+Math.abs(r2)}) = 0`],["Raices: x = "+r1+", x = "+r2+"."]]}},
+cuH4:()=>{let r1=R.int(-5,5);if(!r1)r1=1;let r2=R.int(-5,5);while(!r2)r2=R.int(-5,5);let a=R.coeff().v,s=r1+r2,p=r1*r2;let disc=s*s-4*p;return{e:`$$${a}x^2 ${sign(-s*a)}x ${sign(p*a)} = 0$$`,s:[["Formula general: x = ("+s*a+" ± √"+(a*a*disc)+")/(2·"+a+").",`x = \\frac{${s*a} \\pm ${a*Math.round(Math.sqrt(Math.abs(disc)))}}{${2*a}}`],["Raices: x = "+r1+", x = "+r2+"."]]}},
+cuH5:()=>{let r=R.int(-7,7);if(!r)r=1;return{e:`$$x^2 ${sign(-2*r)}x + ${r*r} = 0$$`,s:[["Trinomio cuadrado perfecto: (x "+(-r>=0?'-'+r:'+'+Math.abs(r))+")^2 = 0.",`x = ${r}`],["Raiz doble: x = "+r+"."]]}},
+
+// --- LOGARITMOS (MEDIO) ---
+loM1:()=>{let a=R.int(2,5),b=R.int(2,6);return{e:`$$\\log_{${a}} x = ${b}$$`,s:[["Por definicion: log_a(x)=b ⇒ x = a^b.",`x = ${a}^{${b}}`],["Calculamos.",`x = ${Math.pow(a,b)}`]]}},
+loM2:()=>{let a=R.int(2,4),x=R.int(2,5);return{e:`$$\\log_{${a}} ${Math.pow(a,x)}$$`,s:[["Aplicamos la definicion: log_a(a^n)=n.",`\\log_{${a}} ${a}^{${x}} = ${x}`]]}},
+loM3:()=>{let a=R.int(2,5),b=R.int(2,5),c=R.int(1,4);return{e:`$$\\log_{${a}}(${b}x) = ${c}$$`,s:[["Por definicion: "+b+"x = "+a+"^"+c+" = "+Math.pow(a,c)+".",`x = \\frac{${Math.pow(a,c)}}{${b}}`]]}},
+loM4:()=>{let a=R.int(2,4);return{e:`$$\\log_{${a}}(${a}^x) = ${a+1}$$`,s:[["Propiedad: log_a(a^x) = x.",`x = ${a+1}`]]}},
+
+// --- LOGARITMOS (DIFICIL) ---
+loH1:()=>{let a=R.int(2,4),b=R.int(2,4),x=R.int(2,5);let arg=Math.pow(a,b*x);return{e:`$$\\log_{${a}}(${a}^{${b}x}) = \\log_{${a}} ${arg}$$`,s:[["Por propiedad: log_a(a^n)=n.",`${b}x = ${b*x}`],["Despejamos x.",`x = ${x}`]]}},
+loH2:()=>{let a=R.int(2,5),b=R.int(2,5),c=R.int(2,5);return{e:`$$\\log_{${a}}(${b}x + ${c}) = 2$$`,s:[["Por definicion: "+b+"x + "+c+" = "+a+"^2 = "+(a*a)+".",`${b}x = ${a*a-c}`],["Despejamos x.",`x = ${(a*a-c)/b}`]]}},
+loH3:()=>{let x=R.int(2,6),a=R.int(2,4);return{e:`$$\\log_{${a}}(${x}^2) = 2\\log_{${a}} ${x}$$`,s:[["Propiedad: log_a(x^n) = n·log_a(x). Se verifica identidad.","Verdadero para todo x > 0."],["Expresiones equivalentes."]]}},
+loH4:()=>{let a=R.int(2,4),b=R.int(2,4),c=R.int(2,4);let x=Math.pow(a,b)+c;return{e:`$$\\log_{${a}}(${a}^{${b}} + ${c}) = \\log_{${a}} ${x}$$`,s:[["Si los logaritmos son iguales, sus argumentos son iguales.",`${a}^{${b}} + ${c} = ${x}`],["Verificamos: "+(Math.pow(a,b))+" + "+c+" = "+x+". Se cumple."]]}},
+
+// --- FUNCION EXPONENCIAL Y LOGARITMICA (CEROS) ---
+fn1:()=>{let a=R.int(2,8);return{e:`$$f(x) = e^{x} - ${a}$$`,s:[["Igualamos a cero: e^x - "+a+" = 0.",`e^{x} = ${a}`],["Aplicamos ln a ambos lados.",`x = \\ln ${a}`]]}},
+fn2:()=>{let a=R.int(2,8),b=R.int(2,4);return{e:`$$f(x) = ${b}e^{x} - ${a}$$`,s:[["Igualamos a cero: "+b+"e^x - "+a+" = 0.",`e^{x} = ${a}/${b}`],["Aplicamos ln a ambos lados.",`x = \\ln\\left(\\frac{${a}}{${b}}\\right)`]]}},
+fn3:()=>{let a=R.int(2,6);return{e:`$$f(x) = \\ln x - ${a}$$`,s:[["Igualamos a cero: ln x - "+a+" = 0.",`\\ln x = ${a}`],["Aplicamos exponencial: x = e^"+a+".",`x = e^{${a}}`]]}},
+fn4:()=>{let a=R.int(2,5),b=R.int(2,5);return{e:`$$f(x) = ${a}\\ln x - ${b}$$`,s:[["Igualamos a cero: "+a+"·ln x - "+b+" = 0.",`\\ln x = \\frac{${b}}{${a}}`],["Aplicamos exponencial.",`x = e^{${b}/${a}}`]]}},
+
+};
 // ========== CACHE ==========
 const cache = new Map();
 
@@ -135,7 +174,11 @@ function generatePool(tema, dificultad, count) {
   const map = {
     derivadas: { facilito: 'dF', dificilito: 'dM', extremo: 'dH' },
     integrales: { facilito: 'iF', dificilito: 'iM', extremo: 'iH' },
-    limites: { facilito: 'lF', dificilito: 'lM', extremo: 'lH', 'infi-facil': 'liF', 'infi-dificil': 'liH' }
+    limites: { facilito: 'lF', dificilito: 'lM', extremo: 'lH', 'infi-facil': 'liF', 'infi-dificil': 'liH' },
+    sistemas: { facilito: 'seF', extremo: 'seH' },
+    cuadraticas: { extremo: 'cuH' },
+    logaritmos: { dificilito: 'loM', extremo: 'loH' },
+    funciones: { dificilito: 'fn' }
   };
   const pre = map[tema][dificultad];
   const keys = Object.keys(G).filter(k => k.startsWith(pre));

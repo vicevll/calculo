@@ -1,26 +1,23 @@
-// generate_data.js — Genera los 1800 ejercicios con soluciones completas
-// y los guarda en exercises.json (fuente unica para web + PDF)
-
+// generate_data.js — Genera ejercicios con soluciones completas
 const { generatePool, getSolution } = require('./generators');
 const fs = require('fs');
 const path = require('path');
 
-const TEMAS = ['derivadas', 'integrales', 'limites'];
-const DIFS = ['facilito', 'dificilito', 'extremo'];
-const PER_DIFF = {
-  derivadas: 300,
-  integrales: 234,
-  limites: 400
+// Estructura: { tema, [ { dificultad, count } ] }
+const PLAN = {
+  derivadas:   [['facilito',300],['dificilito',300],['extremo',300]],
+  integrales:  [['facilito',234],['dificilito',234],['extremo',234]],
+  limites:     [['facilito',400],['dificilito',400],['extremo',400],['infi-facil',150],['infi-dificil',150]],
+  sistemas:    [['facilito',50],['extremo',100]],
+  cuadraticas: [['extremo',150]],
+  logaritmos:  [['dificilito',100],['extremo',100]],
+  funciones:   [['dificilito',50]]
 };
-
-const LIMITES_INF_DIFS = ['infi-facil', 'infi-dificil'];
-const LIMITES_INF_PER_DIFF = 150;
 
 const all = [];
 
-for (const tema of TEMAS) {
-  for (const diff of DIFS) {
-    const count = PER_DIFF[tema];
+for (const tema of Object.keys(PLAN)) {
+  for (const [diff, count] of PLAN[tema]) {
     const pool = generatePool(tema, diff, count);
     for (const preview of pool) {
       const sol = getSolution(preview.id);
@@ -33,24 +30,6 @@ for (const tema of TEMAS) {
           s: sol.s
         });
       }
-    }
-  }
-}
-
-// Limites al infinito (300 ejercicios: 150 facil + 150 dificil)
-for (const diff of LIMITES_INF_DIFS) {
-  const count = LIMITES_INF_PER_DIFF;
-  const pool = generatePool('limites', diff, count);
-  for (const preview of pool) {
-    const sol = getSolution(preview.id);
-    if (sol) {
-      all.push({
-        id: sol.id,
-        tema: 'limites',
-        dificultad: diff,
-        e: sol.e,
-        s: sol.s
-      });
     }
   }
 }
@@ -68,9 +47,8 @@ console.log(`JSON generado: ${outPath}`);
 console.log(`Total ejercicios: ${all.length}`);
 console.log(`Tamano: ${(fs.statSync(outPath).size / 1024 / 1024).toFixed(2)} MB`);
 
-// Verify step counts
 const stepCounts = all.map(e => e.s.length);
 const min = Math.min(...stepCounts);
 const max = Math.max(...stepCounts);
 const avg = (stepCounts.reduce((a,b) => a+b, 0) / stepCounts.length).toFixed(1);
-console.log(`Pasos por ejercicio: min=${min}, max=${max}, avg=${avg}`);
+console.log(`Pasos: min=${min}, max=${max}, avg=${avg}`);
