@@ -13,6 +13,9 @@ const PER_DIFF = {
   limites: 400
 };
 
+const LIMITES_INF_DIFS = ['infi-facil', 'infi-dificil'];
+const LIMITES_INF_PER_DIFF = 150;
+
 const all = [];
 
 for (const tema of TEMAS) {
@@ -30,6 +33,24 @@ for (const tema of TEMAS) {
           s: sol.s
         });
       }
+    }
+  }
+}
+
+// Limites al infinito (300 ejercicios: 150 facil + 150 dificil)
+for (const diff of LIMITES_INF_DIFS) {
+  const count = LIMITES_INF_PER_DIFF;
+  const pool = generatePool('limites', diff, count);
+  for (const preview of pool) {
+    const sol = getSolution(preview.id);
+    if (sol) {
+      all.push({
+        id: sol.id,
+        tema: 'limites',
+        dificultad: diff,
+        e: sol.e,
+        s: sol.s
+      });
     }
   }
 }

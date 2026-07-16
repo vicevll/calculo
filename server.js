@@ -34,6 +34,15 @@ app.get('/api/exercises', (req, res) => {
   const key = `${tema}-${dificultad}`;
   let pool = byCategory[key] || [];
 
+  // Para limites al infinito: incluir tambien ejercicios existentes con x->inf
+  if (dificultad === 'infi-facil' || dificultad === 'infi-dificil') {
+    const existingInf = (byCategory['limites-facilito'] || [])
+      .concat(byCategory['limites-dificilito'] || [])
+      .concat(byCategory['limites-extremo'] || [])
+      .filter(ex => ex.e && ex.e.includes('\\infty'));
+    pool = [...pool, ...existingInf];
+  }
+
   // Shuffle aleatoriamente
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
 

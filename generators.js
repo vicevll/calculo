@@ -102,6 +102,30 @@ lH5:()=>({e:"$$\\lim_{x\\to \\infty} \\left(1+\\frac{1}{x}\\right)^x$$",s:[["Def
 lH6:()=>({e:"$$\\lim_{x\\to 0} \\frac{x-\\sin x}{x^3}$$",s:[["L'Hopital tres veces.","\\frac{1}{6}"]]}),
 lH7:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\left(\\frac{x+${a}}{x}\\right)^{x}$$`,s:[["Reescribimos: (1+a/x)^x = [(1+a/x)^(x/a)]^a.","e^{"+a+"}"]]}},
 lH8:()=>({e:"$$\\lim_{x\\to 0^+} x\\ln x$$",s:[["0*(-inf). Reescribimos y L'Hopital.","0"]]}),
+
+// --- LIMITES AL INFINITO (FACIL) ---
+liF1:()=>{let a=R.cs(),n=R.int(2,5),b=R.coef(),c=R.coef(),m=R.int(2,5),d=R.cs();let r=a.v/d.v;while(r===0||!Number.isInteger(r)){d=R.cs();r=a.v/d.v}return{e:`$$\\lim_{x\\to \\infty} \\frac{${a.n}x^{${n}} ${sign(b)}x^{${n-1}}}{${d.n}x^{${m}} ${sign(c)}}$$`,s:[["Comparamos grados: ambos son x^{max(n,m)}.",`\\frac{${a.n}}{${d.n}}`],["El limite es el cociente de coeficientes lideres.",`\\frac{${a.v}}{${d.v}}`]]}},
+liF2:()=>{let a=R.coef(),b=R.coef(),n=R.int(2,4),m=R.int(n+1,n+3);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}x^{${n}} ${sign(b)}x^{${n-1}}}{x^{${m}} + 1}$$`,s:[["Grado del denominador ("+m+") > grado del numerador ("+n+").","0"]]}},
+liF3:()=>{let a=R.int(2,9),n=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}}{x^{${n}}}$$`,s:[["Numerador constante, denominador -> infinito.","0"]]}},
+liF4:()=>{let a=R.coef(),b=R.coef(),n=R.int(2,4);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}x^{${n}} ${sign(b)}}{x^{${n}} + x^{${n-1}}}$$`,s:[["Mismo grado en numerador y denominador.",`\\frac{${a}}{1}`],["El limite es el cociente de coeficientes lideres.",`${a}`]]}},
+liF5:()=>{let a=R.coef(),b=R.coef(),c=R.coef(),n=R.int(2,4);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}x^{${n}} ${sign(b)}x^{${n-1}}}{${c}x^{${n}} + x^{${n-2}}}$$`,s:[["Mismo grado. Cociente de coeficientes lideres.",`\\frac{${a}}{${c}}`]]}},
+liF6:()=>{let a=R.int(2,8),b=R.cs(),n=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}}{${b.n}x^{${n}} + 1}$$`,s:[["El denominador crece sin limite.","0"]]}},
+liF7:()=>{let a=R.coef(),b=R.cs(),c=R.coef(),n=R.int(2,4);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}x^{${n}} ${sign(c)}}{${b.n}x^{${n}} + x^{${n-1}}}$$`,s:[["Mismo grado n="+n+".",`\\frac{${a}}{${b.n}}`],["El limite es a_n/b_n.",`\\frac{${a}}{${b.v}}`]]}},
+liF8:()=>{let a=R.coef(),b=R.coef(),c=R.coef(),n=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}x^{${n}} ${sign(b)}x^{${n-1}} ${sign(c)}}{x^{${n}} - x^{${n-2}} + 7}$$`,s:[["Ambos polinomios de grado "+n+".",`\\frac{${a}}{1}`],["El limite es el cociente de los coeficientes de x^{"+n+"}.",`${a}`]]}},
+liF9:()=>{let a=R.coef(),b=R.coef(),n=R.int(3,6);return{e:`$$\\lim_{x\\to \\infty} \\frac{${a}x^{${n}} + ${b}}{x^{${n-1}} + x^{${n-2}}}$$`,s:[["Grado numerador ("+n+") > grado denominador ("+(n-1)+").","\\infty"]]}},
+liF10:()=>{let a=R.cs(),b=R.coef(),n=R.int(3,5),c=R.int(2,6);let num=a.n,den=c;return{e:`$$\\lim_{x\\to \\infty} \\frac{${a.n}x^{${n}} ${sign(b)}x^{${n-2}}}{${c}x^{${n}} + x^{${n-1}}}$$`,s:[["Mismo grado. Cociente de coeficientes lideres.",`\\frac{${num}}{${den}}`]]}},
+
+// --- LIMITES AL INFINITO (AVANZADO) ---
+liH1:()=>{let a=R.int(2,6);return{e:`$$\\lim_{x\\to \\infty} (\\sqrt{x^2+${a}x} - x)$$`,s:[["Forma indeterminada: inf - inf. Racionalizamos con el conjugado.",`\\frac{${a}x}{\\sqrt{x^2+${a}x}+x}`],["Dividimos numerador y denominador entre x.",`\\frac{${a}}{\\sqrt{1+${a}/x}+1}`],["Cuando x->inf, ${a}/x -> 0.",`\\frac{${a}}{2}`]]}},
+liH2:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\left(1+\\frac{${a}}{x}\\right)^{x}$$`,s:[["Forma 1^inf. Reconocemos el numero e.",`\\left[\\left(1+\\frac{${a}}{x}\\right)^{x/${a}}\\right]^{${a}}`],["Lo de dentro tiende a e.",`e^{${a}}`]]}},
+liH3:()=>{let a=R.int(1,4),b=R.int(1,4);return{e:`$$\\lim_{x\\to \\infty} \\left(\\frac{x+${a}}{x}\\right)^{${b}x}$$`,s:[["Reescribimos: (1 + a/x)^(bx).","[(1+a/x)^(x/a)]^(ab)"],["Lo de dentro -> e.",`e^{${a*b}}`]]}},
+liH4:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} x\\sin\\left(\\frac{${a}}{x}\\right)$$`,s:[["Sustitucion: t = a/x. Cuando x->inf, t->0^+.",`${a}\\lim_{t\\to 0^+}\\frac{\\sin t}{t}`],["Limite notable: sin(t)/t -> 1.",`${a}`]]}},
+liH5:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\frac{\\ln x}{x^{1/${a}}}$$`,s:[["L'Hopital. El logaritmo crece mas lento que cualquier potencia positiva.",`\\lim_{x\\to\\infty} \\frac{1/x}{(1/${a})x^{1/${a}-1}} = \\lim_{x\\to\\infty} \\frac{${a}}{x^{1/${a}}}`],["El denominador -> inf, numerador constante.","0"]]}},
+liH6:()=>{let a=R.int(2,4);return{e:`$$\\lim_{x\\to \\infty} \\frac{e^{x}}{x^{${a}}}$$`,s:[["La exponencial crece mas rapido que cualquier polinomio.",`\\frac{\\infty}{\\infty}`],["Aplicamos L'Hopital "+a+" veces. El denominador se vuelve constante, el numerador sigue siendo e^x.",`\\lim_{x\\to\\infty} \\frac{e^x}{${a}!}`],["e^x -> inf.","\\infty"]]}},
+liH7:()=>{let a=R.int(2,6);return{e:`$$\\lim_{x\\to \\infty} \\left(\\sqrt{x^2+${a}} - \\sqrt{x^2+${a-1}}\\right)$$`,s:[["Forma inf - inf. Racionalizamos.",`\\frac{${a}-${a-1}}{\\sqrt{x^2+${a}}+\\sqrt{x^2+${a-1}}}`],["Simplificamos el numerador: es 1.",`\\frac{1}{\\sqrt{x^2+${a}}+\\sqrt{x^2+${a-1}}}`],["Cuando x->inf, el denominador -> inf.","0"]]}},
+liH8:()=>{let a=R.int(2,6);return{e:`$$\\lim_{x\\to \\infty} \\frac{\\sqrt{x^2+${a}}}{\\sqrt[3]{x^3+1}}$$`,s:[["Dividimos numerador y denominador entre x.",`\\frac{\\sqrt{1+${a}/x^2}}{\\sqrt[3]{1+1/x^3}}`],["Cuando x->inf, "+a+"/x^2->0 y 1/x^3->0.","1"]]}},
+liH9:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\left(\\frac{x+${a}}{x-${a}}\\right)^{x}$$`,s:[["Reescribimos la base: 1 + 2a/(x-a).","[(1+2a/(x-a))^{(x-a)/(2a)}]^{2a}"],["El interior -> e.",`e^{${2*a}}`]]}},
+liH10:()=>{let a=R.int(2,5);return{e:`$$\\lim_{x\\to \\infty} \\frac{\\ln(x^{${a}}+1)}{\\ln x}$$`,s:[["Ambos -> inf. Aplicamos L'Hopital.",`\\frac{${a}x^{${a-1}}/(x^{${a}}+1)}{1/x} = \\frac{${a}x^{${a}}}{x^{${a}}+1}`],["Cuando x->inf, esta fraccion tiende a...",`${a}`]]}},
 };
 
 // ========== CACHE ==========
@@ -111,7 +135,7 @@ function generatePool(tema, dificultad, count) {
   const map = {
     derivadas: { facilito: 'dF', dificilito: 'dM', extremo: 'dH' },
     integrales: { facilito: 'iF', dificilito: 'iM', extremo: 'iH' },
-    limites: { facilito: 'lF', dificilito: 'lM', extremo: 'lH' }
+    limites: { facilito: 'lF', dificilito: 'lM', extremo: 'lH', 'infi-facil': 'liF', 'infi-dificil': 'liH' }
   };
   const pre = map[tema][dificultad];
   const keys = Object.keys(G).filter(k => k.startsWith(pre));

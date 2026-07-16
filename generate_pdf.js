@@ -66,8 +66,10 @@ for (const tema of ['derivadas', 'integrales', 'limites']) {
   const temaExs = data.exercises.filter(ex => ex.tema === tema);
   tex += `\\section{${temaLabel[tema]}}\n\n`;
 
+  // Dificultades estandar
   for (const diff of DIFS) {
     const diffExs = temaExs.filter(ex => ex.dificultad === diff.key);
+    if (!diffExs.length) continue;
     tex += `\\subsection{${diff.label} (${diffExs.length} ejercicios)}\n\n`;
 
     for (let i = 0; i < diffExs.length; i++) {
@@ -93,6 +95,33 @@ for (const tema of ['derivadas', 'integrales', 'limites']) {
       }
     }
     tex += '\\newpage\n';
+  }
+
+  // Limites al infinito (subseccion especial)
+  if (tema === 'limites') {
+    const infiExs = temaExs.filter(ex => ex.dificultad === 'infi-facil' || ex.dificultad === 'infi-dificil');
+    if (infiExs.length) {
+      tex += `\\subsection{Limites al Infinito (${infiExs.length} ejercicios)}\n\n`;
+      for (let i = 0; i < infiExs.length; i++) {
+        const ex = infiExs[i];
+        totalEx++;
+        const enunciado = ex.e.replace(/^\$\$/, '').replace(/\$\$$/, '');
+        tex += `\\begin{ejbox}\n`;
+        tex += `\\textbf{Ejercicio ${totalEx}.}\\quad `;
+        tex += `$${enunciado}$\n`;
+        tex += `\\end{ejbox}\n\n`;
+        tex += `\\begin{solbox}\n`;
+        tex += `\\textbf{Resultado:} `;
+        if (ex.s && ex.s.length > 0) {
+          tex += `\\(\\displaystyle ${ex.s[ex.s.length - 1][0]}\\)\n`;
+        }
+        tex += `\\end{solbox}\n\n`;
+        if ((i + 1) % 3 === 0) {
+          tex += '\\newpage\n';
+        }
+      }
+      tex += '\\newpage\n';
+    }
   }
 }
 

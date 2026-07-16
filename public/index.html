@@ -14,6 +14,7 @@
   --text:#e6e6f0;--text2:#9090a6;--text3:#585868;
   --accent:#5898f0;--accent-dim:rgba(88,152,240,.12);
   --green:#3dcc85;--orange:#f0a050;--red:#e85555;--purple:#a078f0;
+  --pink:#e870a0;--teal:#40c4c4;
   --radius:10px;--radius-sm:7px;--radius-lg:14px;
   --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   --transition:220ms cubic-bezier(.4,0,.2,1);
@@ -50,6 +51,8 @@ aside button.diff .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 aside button.diff .dot.facil{background:var(--green)}
 aside button.diff .dot.medio{background:var(--orange)}
 aside button.diff .dot.dificil{background:var(--red)}
+aside button.diff .dot.infi{background:var(--teal)}
+aside button.diff .dot.infi-h{background:var(--pink)}
 
 #grid-area{flex:1;overflow-y:auto;padding:24px 28px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:12px;padding-bottom:80px}
@@ -184,6 +187,9 @@ aside button.diff .dot.dificil{background:var(--red)}
     <button class="diff active" data-diff="facilito"><span class="dot facil"></span>Facil</button>
     <button class="diff" data-diff="dificilito"><span class="dot medio"></span>Intermedio</button>
     <button class="diff" data-diff="extremo"><span class="dot dificil"></span>Avanzado</button>
+    <div class="section-label infi-section-label" style="margin-top:14px;display:none">Limites al Infinito</div>
+    <button class="diff infi-diff" data-diff="infi-facil" style="display:none"><span class="dot infi"></span>Facil</button>
+    <button class="diff infi-diff" data-diff="infi-dificil" style="display:none"><span class="dot infi-h"></span>Dificil</button>
   </aside>
   <div id="grid-area"></div>
   <div id="methods-view"></div>
@@ -467,6 +473,8 @@ function renderMethods() {
 function switchView(v) {
   const grid = document.getElementById('grid-area'), mv = document.getElementById('methods-view');
   const sidebar = document.getElementById('sidebar'), ctrls = document.getElementById('exercise-controls');
+  const infiLabels = document.querySelectorAll('.infi-section-label');
+  const infiBtns = document.querySelectorAll('.infi-diff');
   if (v === 'metodos') {
     grid.style.display = 'none'; mv.style.display = 'block'; mv.classList.add('active');
     sidebar.classList.add('hide'); ctrls.classList.add('hide');
@@ -474,7 +482,20 @@ function switchView(v) {
   } else {
     grid.style.display = ''; mv.style.display = 'none'; mv.classList.remove('active');
     sidebar.classList.remove('hide'); ctrls.classList.remove('hide');
-    state.tema = v; loadGrid();
+    state.tema = v;
+    // Mostrar/ocultar seccion de limites al infinito
+    const showInfi = (v === 'limites');
+    infiLabels.forEach(el => el.style.display = showInfi ? '' : 'none');
+    infiBtns.forEach(el => el.style.display = showInfi ? '' : 'none');
+    // Si se habia seleccionado una dificultad infinito, volver a facilito
+    if (state.dificultad === 'infi-facil' || state.dificultad === 'infi-dificil') {
+      if (v !== 'limites') {
+        state.dificultad = 'facilito';
+        updateDiffButtons();
+      }
+    }
+    updateDiffButtons();
+    loadGrid();
   }
 }
 
@@ -494,6 +515,12 @@ document.querySelectorAll('aside button.diff').forEach(btn => {
     loadGrid();
   });
 });
+
+function updateDiffButtons() {
+  document.querySelectorAll('aside button.diff').forEach(b => {
+    b.classList.toggle('active', b.dataset.diff === state.dificultad);
+  });
+}
 
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
 
