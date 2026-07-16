@@ -11,7 +11,8 @@ const PLAN = {
   sistemas:    [['facilito',50],['extremo',100]],
   cuadraticas: [['extremo',150]],
   logaritmos:  [['dificilito',100],['extremo',100]],
-  funciones:   [['dificilito',50]]
+  exponencial: [['dificilito',25]],
+  logaritmica: [['dificilito',25]]
 };
 
 const all = [];

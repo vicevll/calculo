@@ -45,6 +45,7 @@ main{flex:1;display:flex;overflow:hidden}
 aside{width:210px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;display:flex;flex-direction:column;gap:5px;overflow-y:auto}
 aside .section-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:6px 4px 2px;margin-top:6px}
 aside .section-label:first-child{margin-top:0}
+aside .section-label .sicon{font-size:.85rem;margin-right:3px}
 aside button.diff{border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;padding:10px 12px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);text-align:left;display:flex;align-items:center;gap:8px}
 aside button.diff:hover{border-color:var(--border-hover);color:var(--text);background:var(--bg3)}
 aside button.diff.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
@@ -171,11 +172,11 @@ aside button.tema-btn.active{border-color:var(--accent)!important;color:var(--ac
 <header>
   <div class="logo">calcu<span>lo</span></div>
   <nav>
-    <button data-cat="calculo" class="active">Calculo</button>
-    <button data-cat="m1">M1</button>
-    <button data-cat="m2">M2</button>
+    <button data-cat="calculo" class="active">&#x221e; Calculo</button>
+    <button data-cat="m1">{ } M1</button>
+    <button data-cat="m2">log M2</button>
     <span class="sep"></span>
-    <button data-cat="metodos" class="metodos-btn">Metodos</button>
+    <button data-cat="metodos" class="metodos-btn">&#9776; Metodos</button>
   </nav>
   <div class="spacer"></div>
   <div class="controls" id="exercise-controls">
@@ -258,11 +259,13 @@ logaritmos: [
   {title:"Cambio de base", formula:"$$\\log_a x = \\frac{\\log_b x}{\\log_b a}$$", desc:"Permite calcular cualquier logaritmo usando una base conocida.", eg:"$$\\log_5 25 = \\frac{\\ln 25}{\\ln 5} = 2$$"},
   {title:"Logaritmo natural", formula:"$$\\ln e = 1,\\; \\ln 1 = 0,\\; e^{\\ln x} = x$$", desc:"ln = log_e. Es la funcion inversa de la exponencial.", eg:"$$\\ln(e^3) = 3$$"},
 ],
-funciones: [
+exponencial: [
   {title:"Ceros de exponencial", formula:"$$e^x = a \\;\\Rightarrow\\; x = \\ln a \\;(a>0)$$", desc:"Aplicar logaritmo natural a ambos lados.", eg:"$$e^x = 5 \\;\\Rightarrow\\; x = \\ln 5$$"},
+  {title:"Exponencial con coeficiente", formula:"$$a \\cdot e^x - b = 0 \\;\\Rightarrow\\; x = \\ln(b/a)$$", desc:"Despejar e^x primero, luego aplicar ln.", eg:"$$3e^x - 9 = 0 \\;\\Rightarrow\\; x = \\ln 3$$"},
+],
+logaritmica: [
   {title:"Ceros de logaritmica", formula:"$$\\ln x = a \\;\\Rightarrow\\; x = e^a$$", desc:"Aplicar exponencial a ambos lados.", eg:"$$\\ln x = 2 \\;\\Rightarrow\\; x = e^2$$"},
-  {title:"Crecimiento exponencial", formula:"$$a \\cdot e^x - b = 0 \\;\\Rightarrow\\; x = \\ln(b/a)$$", desc:"Despejar e^x primero, luego aplicar ln.", eg:"$$3e^x - 9 = 0 \\;\\Rightarrow\\; x = \\ln 3$$"},
-  {title:"Dominio y rango", formula:"$$f(x)=\\log_a x \\to (0,\\infty),\\; f(x)=a^x \\to \\mathbb{R}$$", desc:"El logaritmo solo acepta x>0. La exponencial todo R.", eg:"$$f(x)=\\ln(x-2),\\; \\text{Dom}: x>2$$"},
+  {title:"Logaritmica con coeficiente", formula:"$$a\\ln x - b = 0 \\;\\Rightarrow\\; x = e^{b/a}$$", desc:"Despejar ln x primero, luego aplicar exponencial.", eg:"$$2\\ln x - 6 = 0 \\;\\Rightarrow\\; x = e^3$$"},
 ],
 };
 
@@ -286,8 +289,9 @@ const CATS = {
   m2: { 
     label: 'M2',
     temas: {
-      logaritmos: { label:'Logaritmos', difs:['dificilito','extremo'] },
-      funciones:  { label:'Funcion exp/log', difs:['dificilito'] }
+      logaritmos:  { label:'Logaritmos', difs:['dificilito','extremo'] },
+      exponencial: { label:'Funcion Exponencial', difs:['dificilito'] },
+      logaritmica: { label:'Funcion Logaritmica', difs:['dificilito'] }
     }
   }
 };
@@ -494,8 +498,8 @@ document.getElementById('btn-reiniciar').addEventListener('click', () => { loadG
 function renderMethods() {
   const mv = document.getElementById('methods-view');
   const m = methods[state.metodoTema];
-  const methodTabs = ['derivadas','integrales','limites','sistemas','cuadraticas','logaritmos','funciones'];
-  const methodLabels = {derivadas:'Derivadas',integrales:'Integrales',limites:'Limites',sistemas:'Sistemas',cuadraticas:'Cuadraticas',logaritmos:'Logaritmos',funciones:'Funciones'};
+  const methodTabs = ['derivadas','integrales','limites','sistemas','cuadraticas','logaritmos','exponencial','logaritmica'];
+  const methodLabels = {derivadas:'Derivadas',integrales:'Integrales',limites:'Limites',sistemas:'Sistemas',cuadraticas:'Cuadraticas',logaritmos:'Logaritmos',exponencial:'Exponencial',logaritmica:'Logaritmica'};
   mv.innerHTML = `
     <div class="methods-header">
       <h2>Metodos</h2>
@@ -525,17 +529,20 @@ function renderSidebar() {
   const aside = document.getElementById('sidebar');
   const cat = CATS[state.categoria];
   if (!cat) { aside.innerHTML = ''; return; }
-  let html = '<div class="section-label">Tema</div>';
+  let html = '<div class="section-label"><span class="sicon">&#9632;</span> Tema</div>';
   for (const [key, t] of Object.entries(cat.temas)) {
     html += `<button class="diff tema-btn" data-tema="${key}">${t.label}</button>`;
   }
-  html += '<div class="section-label" style="margin-top:14px">Dificultad</div>';
+  html += '<div class="section-label" style="margin-top:14px"><span class="sicon">&#9679;</span> Dificultad</div>';
   const temaCfg = cat.temas[state.tema];
   if (temaCfg) {
     for (const d of temaCfg.difs) {
       const dotClass = DIF_DOTS[d] || 'facil';
       html += `<button class="diff" data-diff="${d}"><span class="dot ${dotClass}"></span>${DIF_LABELS[d] || d}</button>`;
     }
+  }
+  if (state.tema === 'exponencial' || state.tema === 'logaritmica') {
+    html += '<div class="section-label" style="margin-top:10px;text-transform:none;font-weight:400;color:var(--text2);line-height:1.4">Encuentra los ceros de cada funcion:<br>f(x)=0 y despeja x.</div>';
   }
   aside.innerHTML = html;
   aside.querySelectorAll('button.tema-btn').forEach(btn => {
