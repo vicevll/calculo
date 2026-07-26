@@ -40,6 +40,9 @@ header .controls button:hover{border-color:var(--border-hover);color:var(--text)
 header .controls button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 #contador{font-size:.72rem;color:var(--text3)}
 .hide{display:none!important}
+#fab-aleatorio{display:none}
+.hamburger{display:none;border:none;background:transparent;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:6px 8px;border-radius:var(--radius-sm);transition:all var(--transition);flex-shrink:0}
+.hamburger:hover{color:var(--text);background:var(--bg4)}
 
 main{flex:1;display:flex;overflow:hidden}
 aside{width:210px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;display:flex;flex-direction:column;gap:5px;overflow-y:auto}
@@ -165,13 +168,13 @@ aside button.tema-btn.active{border-color:var(--accent)!important;color:var(--ac
 .popup-nav button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .popup-nav button.primary:hover{opacity:.85}
 
-@media(max-width:768px){html{font-size:15px}main{flex-direction:column}aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:4px;border-right:none;border-bottom:1px solid var(--border)}aside .section-label{display:none}aside button.diff{font-size:.72rem;padding:7px 9px;flex:1;min-width:70px;justify-content:center}.grid{grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px}#grid-area{padding:12px 8px}#methods-view{padding:16px 12px}}
+@media(max-width:768px){html{font-size:15px}header{padding:0 10px}header .hamburger{display:flex;align-items:center;justify-content:center}header nav{display:none;position:fixed;top:56px;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);flex-direction:column;padding:6px 8px 10px;z-index:25;gap:2px;margin-left:0}header nav.open{display:flex}header nav .sep{display:none}header nav button{font-size:.85rem;width:100%;text-align:left;padding:11px 14px;border-radius:var(--radius)}header .controls #btn-reiniciar{font-size:.7rem;padding:4px 8px}header .controls #btn-aleatorio{display:none}#contador{font-size:.65rem}#fab-aleatorio{display:flex;position:fixed;bottom:20px;right:16px;z-index:30;width:50px;height:50px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(88,152,240,.45);transition:all var(--transition)}#fab-aleatorio:active{transform:scale(.92)}body.has-fab #grid-area,body.has-fab #methods-view{padding-bottom:90px}main{flex-direction:column}aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:5px;border-right:none;border-bottom:1px solid var(--border);align-items:center}aside .section-label{display:none}aside button.diff{font-size:.68rem;padding:5px 10px;border-radius:99px;min-width:auto;flex:none}aside button.diff .dot{width:7px;height:7px}aside button.tema-btn{font-size:.78rem;padding:8px 12px;border-radius:var(--radius)}.grid{grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px}#grid-area{padding:12px 8px}#methods-view{padding:16px 12px}.popup-overlay{padding:12px;align-items:flex-end}.popup{max-height:92vh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;max-width:100%}.popup-nav{padding:0 16px 16px}.popup-body{padding:16px}.popup-header{padding:14px 16px}.method-tabs{flex-wrap:wrap}.method-tabs button{font-size:.75rem;padding:7px 12px}}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">calcu<span>lo</span></div>
-  <nav>
+  <nav id="main-nav">
     <button data-cat="calculo" class="active">&#x221e; Calculo</button>
     <button data-cat="m1">{ } M1</button>
     <button data-cat="m2">log M2</button>
@@ -184,6 +187,7 @@ aside button.tema-btn.active{border-color:var(--accent)!important;color:var(--ac
     <button id="btn-reiniciar">Reiniciar</button>
     <button id="btn-aleatorio" class="primary">Aleatorio <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-left:3px"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="16" r="1.2" fill="currentColor"/><circle cx="16" cy="16" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></button>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu">&#9776;</button>
 </header>
 <main>
   <aside id="sidebar"></aside>
@@ -192,6 +196,9 @@ aside button.tema-btn.active{border-color:var(--accent)!important;color:var(--ac
 </main>
 <div id="toast"></div>
 <div class="popup-overlay" id="popup-overlay"><div class="popup" id="popup"></div></div>
+<button id="fab-aleatorio" aria-label="Ejercicio aleatorio" title="Aleatorio">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="8" r="1.3" fill="currentColor"/><circle cx="8" cy="16" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -476,6 +483,21 @@ function randomCard() {
 
 document.getElementById('btn-aleatorio').addEventListener('click', randomCard);
 document.getElementById('btn-reiniciar').addEventListener('click', () => { loadGrid(); toast('Ejercicios reiniciados'); });
+document.getElementById('fab-aleatorio').addEventListener('click', randomCard);
+
+// Hamburger toggle
+const hamburger = document.getElementById('hamburger');
+const mainNav = document.getElementById('main-nav');
+if (hamburger && mainNav) {
+  hamburger.addEventListener('click', () => {
+    mainNav.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mainNav.contains(e.target)) {
+      mainNav.classList.remove('open');
+    }
+  });
+}
 
 // ========== METHODS ==========
 function renderMethods() {
@@ -553,13 +575,18 @@ function renderSidebar() {
 function switchView(cat) {
   const grid = document.getElementById('grid-area'), mv = document.getElementById('methods-view');
   const sidebar = document.getElementById('sidebar'), ctrls = document.getElementById('exercise-controls');
+  const fab = document.getElementById('fab-aleatorio'), nav = document.getElementById('main-nav');
+  if (nav) nav.classList.remove('open');
   if (cat === 'metodos') {
     grid.style.display = 'none'; mv.style.display = 'block'; mv.classList.add('active');
     sidebar.classList.add('hide'); ctrls.classList.add('hide');
+    if (fab) fab.style.display = 'none';
+    document.body.classList.remove('has-fab');
     renderMethods();
   } else {
     grid.style.display = ''; mv.style.display = 'none'; mv.classList.remove('active');
     sidebar.classList.remove('hide'); ctrls.classList.remove('hide');
+    if (fab) { fab.style.display = ''; document.body.classList.add('has-fab'); }
     state.categoria = cat;
     const catCfg = CATS[cat];
     if (catCfg) {
@@ -585,6 +612,7 @@ document.querySelectorAll('nav button').forEach(btn => {
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
 
 // ========== START ==========
+document.body.classList.add('has-fab');
 renderSidebar();
 loadGrid();
 </script>
