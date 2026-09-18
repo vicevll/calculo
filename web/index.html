@@ -8,100 +8,68 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#010103;--text:#f4f4f7;--muted:#858592;--line:rgba(255,255,255,.14);--blue:#6aa6ff;--violet:#a687ff;--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
-html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
+:root{--bg:#020204;--text:#f5f5f7;--muted:#9999a6;--blue:#6da7ff;--violet:#ad91ff;--cyan:#68e4ff;--line:rgba(255,255,255,.13);--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
 body{min-height:100svh;overflow:hidden}
-body:before{content:'';position:fixed;inset:0;z-index:4;pointer-events:none;opacity:.16;background-image:radial-gradient(rgba(255,255,255,.7) .45px,transparent .6px);background-size:4px 4px;mix-blend-mode:screen}
-.shell{position:relative;min-height:100svh;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(43,43,60,.16),transparent 38%),#010103}
-#number-field{position:absolute;inset:0;width:100%;height:100%;z-index:0}
-.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at center,transparent 30%,rgba(0,0,0,.22) 68%,rgba(0,0,0,.8) 100%)}
-.topbar{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:28px 42px}
-.brand{color:var(--text);font-size:.75rem;font-weight:800;letter-spacing:.18em;text-decoration:none;text-transform:uppercase}
-.brand span{color:var(--blue)}
-.status{display:flex;align-items:center;gap:9px;color:#777783;font:500 .6rem 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
-.status i{display:block;width:5px;height:5px;border-radius:50%;background:#9dffbf;box-shadow:0 0 12px #9dffbf;animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
-.center-copy{position:absolute;z-index:2;top:12%;left:50%;transform:translateX(-50%);width:min(90vw,850px);text-align:center;pointer-events:none;mix-blend-mode:screen}
-.eyebrow{display:none}
-h1{font-size:clamp(2.8rem,7vw,6rem);font-weight:900;letter-spacing:-.09em;line-height:.9;text-shadow:0 0 34px rgba(255,255,255,.12);animation:rise 1s .08s ease both}
-h1 span{display:inline-block;background:linear-gradient(110deg,#fff 12%,#9fbcff 45%,#b9a3ff 72%,#fff 95%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite}
-@keyframes shine{to{background-position:250% center}}
-@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-.modules{position:absolute;left:50%;bottom:37px;z-index:3;display:grid;grid-template-columns:repeat(4,1fr);width:min(720px,calc(100vw - 48px));transform:translateX(-50%);border:1px solid var(--line);background:rgba(2,2,5,.46);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);animation:rise 1s .35s ease both}
-.module{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;min-height:62px;color:var(--muted);font-size:.69rem;font-weight:700;letter-spacing:.16em;text-decoration:none;text-transform:uppercase;transition:color .25s,background .25s}
-.module:after{content:'';position:absolute;right:0;top:18px;bottom:18px;width:1px;background:var(--line)}
-.module:last-child:after{display:none}
-.module .symbol{color:#d8d8e0;font:500 1.05rem 'DM Mono',monospace;letter-spacing:-.08em;transition:color .25s,transform .25s}
-.module:hover{color:#fff;background:rgba(255,255,255,.07)}
-.module:hover .symbol{color:var(--blue);transform:translateY(-2px)}
-.module:nth-child(2):hover .symbol{color:#55e0cd}.module:nth-child(3):hover .symbol{color:#ffc276}.module:nth-child(4):hover .symbol{color:var(--violet)}
-.corner{position:absolute;z-index:3;bottom:43px;color:#575762;font:400 .55rem 'DM Mono',monospace;letter-spacing:.12em}
-.corner.left{left:42px}.corner.right{right:42px}
-@media(max-width:700px){
-  body{overflow:hidden}
-  .topbar{padding:22px 20px}.status{display:none}.center-copy{top:11%}h1{font-size:clamp(2.7rem,13vw,4.5rem);line-height:.88}
-  .modules{bottom:24px;width:calc(100vw - 28px)}.module{min-height:57px;flex-direction:column;gap:5px;font-size:.51rem;letter-spacing:.1em}.module .symbol{font-size:.9rem}.module:after{top:15px;bottom:15px}.corner{display:none}
+body:before{content:'';position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.14;background-image:radial-gradient(rgba(255,255,255,.8) .45px,transparent .65px);background-size:4px 4px;mix-blend-mode:screen}
+.scene{position:relative;min-height:100svh;overflow:hidden;background:radial-gradient(ellipse at 75% 48%,rgba(74,65,130,.2),transparent 35%),radial-gradient(ellipse at 18% 84%,rgba(24,73,116,.15),transparent 32%),#020204}
+.scene:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(2,2,4,.5),transparent 45%,rgba(2,2,4,.12)),radial-gradient(ellipse at center,transparent 36%,rgba(0,0,0,.72) 100%)}
+.topbar{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:28px 5vw}
+.brand{color:var(--text);font-size:.75rem;font-weight:800;letter-spacing:.2em;text-decoration:none;text-transform:uppercase}.brand span{color:var(--blue)}
+.coords{color:#63636e;font:400 .56rem 'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase}
+.hero{position:relative;z-index:2;display:grid;grid-template-columns:minmax(350px,.78fr) minmax(500px,1.22fr);align-items:center;gap:2vw;width:min(1440px,100%);min-height:100svh;margin:auto;padding:70px 5vw 30px}
+.copy{position:relative;z-index:3;max-width:570px;padding-bottom:20px}.kicker{display:flex;align-items:center;gap:10px;margin-bottom:25px;color:#898995;font:500 .63rem 'DM Mono',monospace;letter-spacing:.22em;text-transform:uppercase}.kicker:before{content:'';width:28px;height:1px;background:var(--blue);box-shadow:0 0 12px var(--blue)}
+h1{max-width:620px;font-size:clamp(3.6rem,6.6vw,7.8rem);font-weight:900;letter-spacing:-.095em;line-height:.86;text-align:left;text-wrap:balance;animation:rise .9s ease both}h1 span{display:block;background:linear-gradient(105deg,#fff 4%,#9dbdff 44%,#bb9fff 76%,#fff);background-size:230% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+.description{max-width:340px;margin:31px 0 33px;color:#aaaab5;font-size:1rem;font-weight:400;line-height:1.6;text-align:left;animation:rise .9s .13s ease both}.description strong{color:#e6e6ef;font-weight:600}
+.enter{display:inline-flex;align-items:center;gap:18px;padding:15px 18px 15px 22px;border:1px solid rgba(255,255,255,.26);color:#fff;background:rgba(255,255,255,.07);font-size:.7rem;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:background .25s,border-color .25s,transform .25s,box-shadow .25s;animation:rise .9s .22s ease both}.enter span{display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(255,255,255,.32);font-size:1rem;line-height:1;transition:transform .25s}.enter:hover{border-color:var(--blue);background:rgba(94,145,255,.15);box-shadow:0 0 35px rgba(83,137,255,.18);transform:translateY(-3px)}.enter:hover span{transform:translateX(3px)}
+.visual{position:relative;height:min(84vh,820px);min-height:510px;z-index:1}.visual canvas{position:absolute;inset:0;width:100%;height:100%}
+.visual-label{position:absolute;right:4%;bottom:9%;color:#61616d;font:400 .56rem 'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg)}
+@keyframes shine{to{background-position:230% center}}@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){
+  body{overflow:auto}.scene{min-height:100svh}.hero{grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:0;padding:105px 8vw 28px}.copy{padding:0;max-width:650px}.visual{height:58vh;min-height:390px;margin-top:-15px}.visual-label{display:none}
+  h1{font-size:clamp(3.2rem,11vw,5.8rem)}.description{margin:23px 0 25px;font-size:.92rem}.coords{display:none}
 }
+@media(max-width:520px){.topbar{padding:23px 20px}.hero{padding:95px 22px 20px}.kicker{margin-bottom:18px;font-size:.53rem;letter-spacing:.16em}h1{font-size:clamp(3rem,15vw,4.5rem)}.description{max-width:285px;margin:20px 0 22px;font-size:.85rem}.enter{padding:13px 15px 13px 18px}.visual{height:49vh;min-height:300px;margin-top:0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="shell">
-  <canvas id="number-field" aria-hidden="true"></canvas>
-  <div class="vignette"></div>
-  <header class="topbar">
-    <a class="brand" href="./index.html">Entrena<span>Calculo</span></a>
-  </header>
-  <main>
-    <div class="center-copy"><h1>Entrena<span>Calculo</span></h1></div>
-    <nav class="modules" aria-label="Secciones">
-      <a class="module" href="./app.html?cat=calculo"><span class="symbol">∞</span><span>Calculo</span></a>
-      <a class="module" href="./app.html?cat=m1"><span class="symbol">{ }</span><span>M1</span></a>
-      <a class="module" href="./app.html?cat=m2"><span class="symbol">log</span><span>M2</span></a>
-      <a class="module" href="./app.html?cat=metodos"><span class="symbol">ƒ</span><span>Metodos</span></a>
-    </nav>
+<div class="scene">
+  <header class="topbar"><a class="brand" href="./index.html">Entrena<span>Calculo</span></a><div class="coords">EC / 001</div></header>
+  <main class="hero">
+    <section class="copy">
+      <div class="kicker">entrena sin limites</div>
+      <h1>Entrena<span>Calculo</span></h1>
+      <p class="description">Convierte cada problema en <strong>precision</strong>. Practica, domina y vuelve a intentarlo.</p>
+      <a class="enter" href="./app.html?cat=calculo">Entrar <span>→</span></a>
+    </section>
+    <section class="visual" aria-label="Modelo 3D de numeros"><canvas id="number-model"></canvas><div class="visual-label">precision / movimiento / foco</div></section>
   </main>
 </div>
 <script>
-const canvas=document.getElementById('number-field'),ctx=canvas.getContext('2d'),points=[];
-const pointer={x:0,y:0,tx:0,ty:0};
+const canvas=document.getElementById('number-model'),ctx=canvas.getContext('2d'),dots=[],dust=[],rings=[];
+const pointer={x:0,y:0},reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let width=0,height=0,dpr=1,radius=0;
-const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-function resize(){
-  dpr=Math.min(window.devicePixelRatio||1,2);width=window.innerWidth;height=window.innerHeight;
-  canvas.width=width*dpr;canvas.height=height*dpr;canvas.style.width=width+'px';canvas.style.height=height+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
-  radius=Math.min(width,height)*(.35);createPoints();
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);width=canvas.clientWidth;height=canvas.clientHeight;canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);radius=Math.min(width,height)*.39;buildModel()}
+function buildModel(){
+  dots.length=0;dust.length=0;rings.length=0;const total=Math.min(920,Math.max(470,Math.floor(width*height/1150))),golden=Math.PI*(3-Math.sqrt(5));
+  for(let i=0;i<total;i++){const y=1-(i+.5)*2/total,r=Math.sqrt(1-y*y),a=golden*i;dots.push({x:Math.cos(a)*r,y,z:Math.sin(a)*r,char:String(Math.floor(Math.random()*10)),size:.48+Math.random()*.8})}
+  for(let i=0;i<150;i++){const a=Math.random()*Math.PI*2,b=Math.acos(2*Math.random()-1),r=1.1+Math.random()*.5;dust.push({x:Math.sin(b)*Math.cos(a)*r,y:Math.cos(b)*r,z:Math.sin(b)*Math.sin(a)*r,size:Math.random()*2.3+.5})}
+  for(let i=0;i<4;i++)rings.push({tilt:(i-1.5)*.4,phase:i*Math.PI*.43,width:1+i%2*.8,color:i%2?'104,203,255':'164,132,255'});
 }
-function createPoints(){
-  points.length=0;const count=Math.min(950,Math.max(480,Math.floor(width*height/1450)));const golden=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<count;i++){
-    const y=1-(i+.5)*2/count, r=Math.sqrt(1-y*y),theta=golden*i;
-    points.push({x:Math.cos(theta)*r,y,z:Math.sin(theta)*r,char:String(Math.floor(Math.random()*10)),seed:Math.random(),size:Math.random()*.65+.55});
-  }
-}
+function rotate(v,ry,rx,rz){let x=v.x*Math.cos(ry)-v.z*Math.sin(ry),z=v.x*Math.sin(ry)+v.z*Math.cos(ry),y=v.y*Math.cos(rx)-z*Math.sin(rx);z=v.y*Math.sin(rx)+z*Math.cos(rx);return{x:x*Math.cos(rz)-y*Math.sin(rz),y:x*Math.sin(rz)+y*Math.cos(rz),z}}
+function project(v,cx,cy){const scale=radius/(2.72-v.z);return{x:cx+v.x*scale,y:cy+v.y*scale,z:v.z}}
 function draw(time){
-  const t=reduceMotion?0:time*.00016,rotY=t+pointer.x*.24,rotX=Math.sin(t*.68)*.12+pointer.y*.13;
-  ctx.clearRect(0,0,width,height);const cx=width*.5,cy=height*.465;
-  const cosY=Math.cos(rotY),sinY=Math.sin(rotY),cosX=Math.cos(rotX),sinX=Math.sin(rotX),cosZ=Math.cos(rotY*.27),sinZ=Math.sin(rotY*.27);
-  const rendered=[];
-  for(const p of points){
-    const x1=p.x*cosY-p.z*sinY,z1=p.x*sinY+p.z*cosY;
-    const y2=p.y*cosX-z1*sinX,z2=p.y*sinX+z1*cosX;
-    const x3=x1*cosZ-y2*sinZ,y3=x1*sinZ+y2*cosZ;
-    const depth=(z2+1)/2,scale=radius/(2.65-z2),x=cx+x3*scale,y=cy+y3*scale;
-    rendered.push({p,x,y,depth,size:p.size*(.55+depth*1.35)});
-  }
-  rendered.sort((a,b)=>a.depth-b.depth);
-  for(const item of rendered){
-    const {p,x,y,depth,size}=item;if(x<-30||x>width+30||y<-30||y>height+30)continue;
-    const alpha=.055+depth*.78;ctx.font=`${Math.max(7,size*radius*.035)}px Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle=`rgba(241,241,247,${alpha})`;if(depth>.82){ctx.shadowColor='rgba(220,225,255,.38)';ctx.shadowBlur=5}else ctx.shadowBlur=0;ctx.fillText(p.char,x,y);
-  }
-  ctx.shadowBlur=0;if(!reduceMotion)requestAnimationFrame(draw);
+  const t=reduceMotion?0:time*.00022,ry=t+pointer.x*.35,rx=Math.sin(t*.7)*.13+pointer.y*.2,rz=t*.23,cx=width*.53,cy=height*.52;ctx.clearRect(0,0,width,height);
+  const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,radius*1.15);glow.addColorStop(0,'rgba(100,112,255,.18)');glow.addColorStop(.45,'rgba(65,88,180,.07)');glow.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,width,height);
+  const projectedDust=dust.map(p=>{const q=rotate(p,ry,rx,rz);return{...project(q,cx,cy),size:p.size,depth:(q.z+1.5)/3}}).sort((a,b)=>a.depth-b.depth);
+  for(const p of projectedDust){ctx.fillStyle=`rgba(133,177,255,${.08+p.depth*.3})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.6+p.depth),0,Math.PI*2);ctx.fill()}
+  for(const ring of rings){const back=[],front=[];for(let i=0;i<=100;i++){const a=i/100*Math.PI*2;let v={x:Math.cos(a)*1.27,y:Math.sin(a)*1.27,z:0};v=rotate(v,ring.phase+t*.45,ring.tilt,rz+ring.phase);const p=project(v,cx,cy);(p.z<0?back:front).push(p)}for(const segment of [back,front]){ctx.beginPath();segment.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle=`rgba(${ring.color},${segment===back ? 0.16 : 0.58})`;ctx.lineWidth=ring.width;ctx.shadowColor=`rgba(${ring.color},.6)`;ctx.shadowBlur=segment===front?10:3;ctx.stroke()}ctx.shadowBlur=0}
+  const rendered=dots.map(p=>{const q=rotate(p,ry,rx,rz),pos=project(q,cx,cy);return{p,pos,depth:(q.z+1)/2}}).sort((a,b)=>a.depth-b.depth);
+  for(const item of rendered){const{x,y}=item.pos,depth=item.depth;if(x<-40||x>width+40||y<-40||y>height+40)continue;const alpha=.07+depth*.86,size=item.p.size*(.52+depth*1.4),font=Math.max(7,size*radius*.04);ctx.font=`${font}px Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=`rgba(244,244,250,${alpha})`;if(depth>.76){ctx.shadowColor='rgba(137,176,255,.7)';ctx.shadowBlur=7}else ctx.shadowBlur=0;ctx.fillText(item.p.char,x,y)}ctx.shadowBlur=0;
+  if(!reduceMotion)requestAnimationFrame(draw);
 }
-window.addEventListener('resize',resize,{passive:true});
-window.addEventListener('pointermove',e=>{pointer.tx=(e.clientX/width-.5);pointer.ty=(e.clientY/height-.5);pointer.x+=(pointer.tx-pointer.x)*.06;pointer.y+=(pointer.ty-pointer.y)*.06},{passive:true});
-resize();if(reduceMotion)draw(0);else requestAnimationFrame(draw);
+window.addEventListener('resize',resize,{passive:true});window.addEventListener('pointermove',e=>{const rect=canvas.getBoundingClientRect();pointer.x+=(e.clientX-rect.left-rect.width/2)/rect.width*.18-pointer.x*.02;pointer.y+=(e.clientY-rect.top-rect.height/2)/rect.height*.18-pointer.y*.02},{passive:true});resize();if(reduceMotion)draw(0);else requestAnimationFrame(draw);
 </script>
 </body>
 </html>
