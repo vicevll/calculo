@@ -13,7 +13,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 body{min-height:100svh;overflow:hidden}
 body:before{content:'';position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.14;background-image:radial-gradient(rgba(255,255,255,.8) .45px,transparent .65px);background-size:4px 4px;mix-blend-mode:screen}
 .scene{position:relative;min-height:100svh;overflow:hidden;background:radial-gradient(ellipse at 75% 48%,rgba(74,65,130,.2),transparent 35%),radial-gradient(ellipse at 18% 84%,rgba(24,73,116,.15),transparent 32%),#020204}
-.scene:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(2,2,4,.5),transparent 45%,rgba(2,2,4,.12)),radial-gradient(ellipse at center,transparent 36%,rgba(0,0,0,.72) 100%)}
+.scene:after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(2,2,4,.5),transparent 45%,rgba(2,2,4,.12)),radial-gradient(ellipse at center,transparent 36%,rgba(0,0,0,.72) 100%)}
 .topbar{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:28px 5vw}
 .brand{color:var(--text);font-size:.75rem;font-weight:800;letter-spacing:.2em;text-decoration:none;text-transform:uppercase}.brand span{color:var(--blue)}
 .coords{color:#63636e;font:400 .56rem 'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase}
@@ -22,14 +22,14 @@ body:before{content:'';position:fixed;inset:0;z-index:5;pointer-events:none;opac
 h1{max-width:620px;font-size:clamp(3.6rem,6.6vw,7.8rem);font-weight:900;letter-spacing:-.095em;line-height:.86;text-align:left;text-wrap:balance;animation:rise .9s ease both}h1 span{display:block;background:linear-gradient(105deg,#fff 4%,#9dbdff 44%,#bb9fff 76%,#fff);background-size:230% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
 .description{max-width:340px;margin:31px 0 33px;color:#aaaab5;font-size:1rem;font-weight:400;line-height:1.6;text-align:left;animation:rise .9s .13s ease both}.description strong{color:#e6e6ef;font-weight:600}
 .enter{display:inline-flex;align-items:center;gap:18px;padding:15px 18px 15px 22px;border:1px solid rgba(255,255,255,.26);color:#fff;background:rgba(255,255,255,.07);font-size:.7rem;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:background .25s,border-color .25s,transform .25s,box-shadow .25s;animation:rise .9s .22s ease both}.enter span{display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(255,255,255,.32);font-size:1rem;line-height:1;transition:transform .25s}.enter:hover{border-color:var(--blue);background:rgba(94,145,255,.15);box-shadow:0 0 35px rgba(83,137,255,.18);transform:translateY(-3px)}.enter:hover span{transform:translateX(3px)}
-.visual{position:relative;height:min(84vh,820px);min-height:510px;z-index:1}.visual canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.visual{position:relative;height:min(84vh,820px);min-height:510px;z-index:2}.visual canvas{position:absolute;inset:0;z-index:2;display:block;width:100%;height:100%;background:transparent;pointer-events:none}
 .visual-label{position:absolute;right:4%;bottom:9%;color:#61616d;font:400 .56rem 'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg)}
 @keyframes shine{to{background-position:230% center}}@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:900px){
-  body{overflow:auto}.scene{min-height:100svh}.hero{grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:0;padding:105px 8vw 28px}.copy{padding:0;max-width:650px}.visual{height:58vh;min-height:390px;margin-top:-15px}.visual-label{display:none}
+  body{overflow:auto}.scene{min-height:100svh}.hero{grid-template-columns:1fr;grid-template-rows:auto auto;gap:0;padding:105px 8vw 28px}.copy{padding:0;max-width:650px}.visual{width:100%;height:clamp(300px,52vh,540px);min-height:0;margin-top:-15px}.visual-label{display:none}
   h1{font-size:clamp(3.2rem,11vw,5.8rem)}.description{margin:23px 0 25px;font-size:.92rem}.coords{display:none}
 }
-@media(max-width:520px){.topbar{padding:23px 20px}.hero{padding:95px 22px 20px}.kicker{margin-bottom:18px;font-size:.53rem;letter-spacing:.16em}h1{font-size:clamp(3rem,15vw,4.5rem)}.description{max-width:285px;margin:20px 0 22px;font-size:.85rem}.enter{padding:13px 15px 13px 18px}.visual{height:49vh;min-height:300px;margin-top:0}}
+@media(max-width:520px){.topbar{padding:23px 20px}.hero{padding:95px 22px 20px}.kicker{margin-bottom:18px;font-size:.53rem;letter-spacing:.16em}h1{font-size:clamp(3rem,15vw,4.5rem)}.description{max-width:285px;margin:20px 0 22px;font-size:.85rem}.enter{padding:13px 15px 13px 18px}.visual{height:clamp(280px,48vh,400px);min-height:280px;margin-top:0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -48,7 +48,6 @@ h1{max-width:620px;font-size:clamp(3.6rem,6.6vw,7.8rem);font-weight:900;letter-s
 </div>
 <script>
 const canvas=document.getElementById('number-model'),ctx=canvas.getContext('2d'),dots=[],dust=[],rings=[];
-const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let width=0,height=0,dpr=1,radius=0;
 function resize(){dpr=Math.min(window.devicePixelRatio||1,2);width=canvas.clientWidth;height=canvas.clientHeight;canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);radius=Math.min(width,height)*.39;buildModel()}
 function buildModel(){
@@ -60,15 +59,15 @@ function buildModel(){
 function rotate(v,ry,rx,rz){let x=v.x*Math.cos(ry)-v.z*Math.sin(ry),z=v.x*Math.sin(ry)+v.z*Math.cos(ry),y=v.y*Math.cos(rx)-z*Math.sin(rx);z=v.y*Math.sin(rx)+z*Math.cos(rx);return{x:x*Math.cos(rz)-y*Math.sin(rz),y:x*Math.sin(rz)+y*Math.cos(rz),z}}
 function project(v,cx,cy){const scale=radius/(2.72-v.z);return{x:cx+v.x*scale,y:cy+v.y*scale,z:v.z}}
 function draw(time){
-  const t=reduceMotion?0:time*.00022,ry=t,rx=Math.sin(t*.7)*.13,rz=t*.23,cx=width*.53,cy=height*.52;ctx.clearRect(0,0,width,height);
+  const t=time*.00022,ry=t,rx=Math.sin(t*.7)*.13,rz=t*.23,cx=width*.53,cy=height*.52;ctx.clearRect(0,0,width,height);
   const projectedDust=dust.map(p=>{const q=rotate(p,ry,rx,rz);return{...project(q,cx,cy),size:p.size,depth:(q.z+1.5)/3}}).sort((a,b)=>a.depth-b.depth);
   for(const p of projectedDust){ctx.fillStyle=`rgba(133,177,255,${.08+p.depth*.3})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.6+p.depth),0,Math.PI*2);ctx.fill()}
   for(const ring of rings){const back=[],front=[];for(let i=0;i<=100;i++){const a=i/100*Math.PI*2;let v={x:Math.cos(a)*1.27,y:Math.sin(a)*1.27,z:0};v=rotate(v,ring.phase+t*.45,ring.tilt,rz+ring.phase);const p=project(v,cx,cy);(p.z<0?back:front).push(p)}for(const segment of [back,front]){ctx.beginPath();segment.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle=`rgba(${ring.color},${segment===back ? 0.16 : 0.58})`;ctx.lineWidth=ring.width;ctx.shadowColor=`rgba(${ring.color},.6)`;ctx.shadowBlur=segment===front?10:3;ctx.stroke()}ctx.shadowBlur=0}
   const rendered=dots.map(p=>{const q=rotate(p,ry,rx,rz),pos=project(q,cx,cy);return{p,pos,depth:(q.z+1)/2}}).sort((a,b)=>a.depth-b.depth);
   for(const item of rendered){const{x,y}=item.pos,depth=item.depth;if(x<-40||x>width+40||y<-40||y>height+40)continue;const alpha=.07+depth*.86,size=item.p.size*(.52+depth*1.4),font=Math.max(7,size*radius*.04);ctx.font=`${font}px Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=`rgba(244,244,250,${alpha})`;if(depth>.76){ctx.shadowColor='rgba(137,176,255,.7)';ctx.shadowBlur=7}else ctx.shadowBlur=0;ctx.fillText(item.p.char,x,y)}ctx.shadowBlur=0;
-  if(!reduceMotion)requestAnimationFrame(draw);
+  requestAnimationFrame(draw);
 }
-window.addEventListener('resize',resize,{passive:true});resize();if(reduceMotion)draw(0);else requestAnimationFrame(draw);
+window.addEventListener('resize',resize,{passive:true});resize();requestAnimationFrame(draw);
 </script>
 </body>
 </html>
