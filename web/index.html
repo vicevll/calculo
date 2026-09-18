@@ -11,9 +11,9 @@
 :root{--bg:#020204;--text:#f5f5f7;--muted:#9999a6;--blue:#6da7ff;--violet:#ad91ff;--cyan:#68e4ff;--line:rgba(255,255,255,.13);--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
 body{min-height:100svh;overflow:hidden}
-body:before{content:'';position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.14;background-image:radial-gradient(rgba(255,255,255,.8) .45px,transparent .65px);background-size:4px 4px;mix-blend-mode:screen}
-.scene{position:relative;min-height:100svh;overflow:hidden;background:radial-gradient(ellipse at 75% 48%,rgba(74,65,130,.2),transparent 35%),radial-gradient(ellipse at 18% 84%,rgba(24,73,116,.15),transparent 32%),#020204}
-.scene:after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(2,2,4,.5),transparent 45%,rgba(2,2,4,.12)),radial-gradient(ellipse at center,transparent 36%,rgba(0,0,0,.72) 100%)}
+body:before{content:'';position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.28;background-image:radial-gradient(rgba(177,201,255,.85) .5px,transparent .72px);background-size:4px 4px;mix-blend-mode:screen}
+.scene{position:relative;min-height:100svh;overflow:hidden;background:radial-gradient(ellipse at 76% 46%,rgba(94,77,214,.34),transparent 43%),radial-gradient(ellipse at 15% 78%,rgba(25,111,166,.27),transparent 39%),radial-gradient(ellipse at 50% 12%,rgba(57,45,111,.18),transparent 32%),#04050d}
+.scene:after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(2,2,4,.2),transparent 45%,rgba(2,2,4,.04)),radial-gradient(ellipse at center,transparent 36%,rgba(0,0,0,.42) 100%)}
 .topbar{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:28px 5vw}
 .brand{color:var(--text);font-size:.75rem;font-weight:800;letter-spacing:.2em;text-decoration:none;text-transform:uppercase}.brand span{color:var(--blue)}
 .coords{color:#63636e;font:400 .56rem 'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase}
@@ -49,7 +49,7 @@ h1{max-width:620px;font-size:clamp(3.6rem,6.6vw,7.8rem);font-weight:900;letter-s
 <script>
 const canvas=document.getElementById('number-model'),ctx=canvas.getContext('2d'),dots=[],dust=[],rings=[];
 let width=0,height=0,dpr=1,radius=0;
-function resize(){dpr=Math.min(window.devicePixelRatio||1,2);width=canvas.clientWidth;height=canvas.clientHeight;canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);radius=Math.min(width,height)*.39;buildModel()}
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);width=canvas.clientWidth;height=canvas.clientHeight;canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);const ratio=window.innerWidth <= 520 ? 0.5 : window.innerWidth <= 900 ? 0.54 : 0.57;radius=Math.min(width,height)*ratio;buildModel()}
 function buildModel(){
   dots.length=0;dust.length=0;rings.length=0;const total=Math.min(920,Math.max(470,Math.floor(width*height/1150))),golden=Math.PI*(3-Math.sqrt(5));
   for(let i=0;i<total;i++){const y=1-(i+.5)*2/total,r=Math.sqrt(1-y*y),a=golden*i;dots.push({x:Math.cos(a)*r,y,z:Math.sin(a)*r,char:String(Math.floor(Math.random()*10)),size:.48+Math.random()*.8})}
@@ -59,7 +59,7 @@ function buildModel(){
 function rotate(v,ry,rx,rz){let x=v.x*Math.cos(ry)-v.z*Math.sin(ry),z=v.x*Math.sin(ry)+v.z*Math.cos(ry),y=v.y*Math.cos(rx)-z*Math.sin(rx);z=v.y*Math.sin(rx)+z*Math.cos(rx);return{x:x*Math.cos(rz)-y*Math.sin(rz),y:x*Math.sin(rz)+y*Math.cos(rz),z}}
 function project(v,cx,cy){const scale=radius/(2.72-v.z);return{x:cx+v.x*scale,y:cy+v.y*scale,z:v.z}}
 function draw(time){
-  const t=time*.00022,ry=t,rx=Math.sin(t*.7)*.13,rz=t*.23,cx=width*.53,cy=height*.52;ctx.clearRect(0,0,width,height);
+  const t=time*.00022,ry=t,rx=Math.sin(t*.7)*.13,rz=t*.23,cx=width*.5,cy=height*.5;ctx.clearRect(0,0,width,height);
   const projectedDust=dust.map(p=>{const q=rotate(p,ry,rx,rz);return{...project(q,cx,cy),size:p.size,depth:(q.z+1.5)/3}}).sort((a,b)=>a.depth-b.depth);
   for(const p of projectedDust){ctx.fillStyle=`rgba(133,177,255,${.08+p.depth*.3})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.6+p.depth),0,Math.PI*2);ctx.fill()}
   for(const ring of rings){const back=[],front=[];for(let i=0;i<=100;i++){const a=i/100*Math.PI*2;let v={x:Math.cos(a)*1.27,y:Math.sin(a)*1.27,z:0};v=rotate(v,ring.phase+t*.45,ring.tilt,rz+ring.phase);const p=project(v,cx,cy);(p.z<0?back:front).push(p)}for(const segment of [back,front]){ctx.beginPath();segment.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle=`rgba(${ring.color},${segment===back ? 0.16 : 0.58})`;ctx.lineWidth=ring.width;ctx.shadowColor=`rgba(${ring.color},.6)`;ctx.shadowBlur=segment===front?10:3;ctx.stroke()}ctx.shadowBlur=0}
