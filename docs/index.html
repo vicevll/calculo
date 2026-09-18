@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ejercicicios del vixo</title>
+<title>EntrenaCalculo</title>
 <link rel="icon" type="image/png" href="./favicon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -21,615 +21,100 @@
   --transition:220ms cubic-bezier(.4,0,.2,1);
 }
 html{font-size:17px}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
-
-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:56px;flex-shrink:0;gap:10px;position:sticky;top:0;z-index:20}
-header .logo{font-weight:800;font-size:1.05rem;color:var(--text);letter-spacing:-.4px;flex-shrink:0}
-header .logo span{color:var(--accent)}
-nav{display:flex;gap:2px;margin-left:14px}
-nav button{border:none;background:transparent;color:var(--text2);font-size:.82rem;font-weight:500;cursor:pointer;padding:7px 13px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);white-space:nowrap}
-nav button:hover{color:var(--text);background:var(--bg4)}
-nav button.active{color:var(--accent);background:var(--accent-dim)}
-nav button.metodos-btn{color:var(--purple)}
-nav button.metodos-btn.active{color:var(--purple);background:rgba(160,120,240,.12)}
-nav .sep{width:1px;height:20px;background:var(--border);margin:0 4px}
-header .spacer{flex:1}
-header .controls{display:flex;align-items:center;gap:8px}
-header .controls button{border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:.75rem;font-weight:500;cursor:pointer;padding:5px 11px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font)}
-header .controls button:hover{border-color:var(--border-hover);color:var(--text)}
-header .controls button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-#contador{font-size:.72rem;color:var(--text3)}
-.hide{display:none!important}
-#fab-aleatorio{display:none}
-.hamburger{display:none;border:none;background:transparent;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:6px 8px;border-radius:var(--radius-sm);transition:all var(--transition);flex-shrink:0}
-.hamburger:hover{color:var(--text);background:var(--bg4)}
-
-main{flex:1;display:flex;overflow:hidden}
-aside{width:210px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;display:flex;flex-direction:column;gap:5px;overflow-y:auto}
-aside .section-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:6px 4px 2px;margin-top:6px}
-aside .section-label:first-child{margin-top:0}
-aside .section-label .sicon{font-size:.85rem;margin-right:3px}
-aside button.diff{border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;padding:10px 12px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);text-align:left;display:flex;align-items:center;gap:8px}
-aside button.diff:hover{border-color:var(--border-hover);color:var(--text);background:var(--bg3)}
-aside button.diff.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-aside button.diff .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-aside button.diff .dot.facil{background:var(--green)}
-aside button.diff .dot.medio{background:var(--orange)}
-aside button.diff .dot.dificil{background:var(--red)}
-aside button.diff .dot.infi{background:var(--teal)}
-aside button.diff .dot.infi-h{background:var(--pink)}
-aside button.tema-btn{border-color:transparent!important;background:transparent!important;font-weight:600}
-aside button.tema-btn.active{border-color:var(--accent)!important;color:var(--accent)!important;background:var(--accent-dim)!important}
-
-#grid-area{flex:1;overflow-y:auto;padding:24px 28px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:12px;padding-bottom:80px}
-.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;transition:border-color var(--transition),background var(--transition),box-shadow var(--transition);display:flex;flex-direction:column;min-height:200px;position:relative;overflow:hidden}
-.card:hover{border-color:var(--accent);background:var(--bg4);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
-.card-preview{padding:22px 20px 18px;flex-shrink:0;display:flex;flex-direction:column;height:100%}
-.card .card-num{font-size:.68rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:2px 9px;border-radius:99px;margin-bottom:14px;display:inline-block;flex-shrink:0}
-.card .card-body{flex:1;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--text);line-height:1.55;overflow:hidden;text-align:center;padding:8px 0}
-.card .card-body .katex{font-size:1em}
-.card .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-shrink:0}
-.card .card-badge{font-size:.65rem;color:var(--text3);padding:3px 8px;border-radius:99px;background:var(--bg4)}
-.card .card-hint{font-size:.68rem;color:var(--text3)}
-
-/* Sentinel for infinite scroll */
-#sentinel{height:1px;width:100%;margin-top:-1px}
-.load-more{display:flex;align-items:center;justify-content:center;padding:28px;color:var(--text3);gap:10px;font-size:.85rem}
-.load-more .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
-
-/* Loading */
-.loading{display:flex;align-items:center;justify-content:center;height:60vh;color:var(--text3);gap:12px}
-.loading .spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Popup */
-.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
-.popup-overlay.open{opacity:1;pointer-events:auto}
-.popup{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);max-width:640px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7);transform:scale(.95) translateY(10px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.popup-overlay.open .popup{transform:scale(1) translateY(0)}
-.popup-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
-.popup-header .popup-num{font-size:.7rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:3px 10px;border-radius:99px;flex-shrink:0}
-.popup-header .popup-close{border:1px solid var(--border);background:var(--bg4);color:var(--text2);font-size:1.1rem;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all var(--transition);flex-shrink:0}
-.popup-header .popup-close:hover{color:var(--text);border-color:var(--border-hover)}
-.popup-body{padding:20px 22px 24px;flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-.popup-section{margin-bottom:20px;flex-shrink:0}
-.popup-section.grow{flex:1;min-height:0;display:flex;flex-direction:column;margin-bottom:0}
-.popup-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:10px;flex-shrink:0}
-.popup-exercise{font-size:1rem;color:var(--text);line-height:1.7;text-align:center;padding:10px 0}
-.popup-exercise .katex{font-size:1.1em}
-.sol-toggle{width:100%;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:.85rem;font-weight:600;cursor:pointer;padding:11px 16px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;margin-bottom:0}
-.sol-toggle:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-.sol-toggle .arr{transition:transform var(--transition);font-size:.7rem}
-.sol-toggle.open{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);margin-bottom:14px}
-.sol-toggle.open .arr{transform:rotate(180deg)}
-.sol-steps{flex:1;min-height:0;overflow-y:auto;display:none}
-.sol-steps.open{display:block}
-.sol-steps-inner{padding:0 0 8px}
-.sol-step{padding:14px 0;border-bottom:1px solid var(--border)}
-.sol-step:last-child{border-bottom:none;padding-bottom:0}
-.sol-step .step-num{font-size:.68rem;font-weight:600;color:var(--accent);background:var(--accent-dim);padding:3px 9px;border-radius:99px;display:inline-block;margin-bottom:6px}
-.sol-step .step-why{font-size:.85rem;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.sol-step .step-math{font-size:.92rem;color:var(--text);padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);line-height:1.9;overflow-x:auto}
-.sol-step .step-math .katex{font-size:1em}
-.sol-loading{display:flex;align-items:center;justify-content:center;padding:30px;color:var(--text3);gap:10px}
-.sol-loading .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
-
-/* Methods */
-#methods-view{flex:1;overflow-y:auto;padding:28px 36px;display:none}
-#methods-view.active{display:block}
-.methods-header{margin-bottom:24px}
-.methods-header h2{font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:4px}
-.methods-header p{font-size:.85rem;color:var(--text2);line-height:1.5}
-.method-tabs{display:flex;gap:4px;margin-bottom:20px}
-.method-tabs button{border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;padding:8px 16px;border-radius:var(--radius-sm);transition:all var(--transition);font-family:var(--font)}
-.method-tabs button:hover{color:var(--text);background:var(--bg3)}
-.method-tabs button.active{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
-.method-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
-.method-card h4{font-size:.88rem;font-weight:600;color:var(--accent);margin-bottom:8px}
-.method-card .formula{font-size:.92rem;color:var(--text);padding:10px 14px;background:var(--bg4);border-radius:var(--radius-sm);border:1px solid var(--border);line-height:1.9;margin-bottom:8px;overflow-x:auto}
-.method-card .formula .katex{font-size:1em}
-.method-card .desc{font-size:.82rem;color:var(--text2);line-height:1.55;margin-bottom:8px}
-.method-card .example{font-size:.85rem;color:var(--green);margin-top:6px}
-.method-card .example .katex{font-size:.95em}
-
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bg4);color:var(--text);padding:10px 22px;border-radius:var(--radius);border:1px solid var(--border);font-size:.82rem;box-shadow:0 4px 24px rgba(0,0,0,.5);z-index:100;opacity:0;pointer-events:none;transition:opacity .3s}
-#toast.visible{opacity:1;pointer-events:auto}
-
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:10px}
-.sol-steps::-webkit-scrollbar-thumb{background:rgba(88,152,240,.25)}
-.sol-steps::-webkit-scrollbar-thumb:hover{background:rgba(88,152,240,.4)}
-
-/* Result reveal */
-.result-reveal{
-  width:100%;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);
-  font-size:.88rem;font-weight:600;cursor:pointer;padding:14px 16px;border-radius:var(--radius-sm);
-  transition:all var(--transition);font-family:var(--font);
-  display:flex;align-items:center;justify-content:center;gap:8px;
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;
+  display:flex;flex-direction:column;overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
-.result-reveal:hover{background:var(--accent);color:#fff}
-.result-reveal .arr{transition:transform var(--transition);font-size:.7rem}
-.result-reveal.open .arr{transform:rotate(180deg)}
-.result-hidden{display:flex;align-items:center;justify-content:center;min-height:60px;color:var(--text3);font-size:.85rem}
-
-/* Popup navigation */
-.popup-nav{
-  display:flex;gap:8px;padding:0 22px 20px;flex-shrink:0;
+body::before,body::after{
+  content:'';position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;
 }
-.popup-nav button{
-  flex:1;border:1px solid var(--border);background:var(--bg3);color:var(--text2);
-  font-size:.82rem;font-weight:600;cursor:pointer;padding:10px 14px;border-radius:var(--radius-sm);
-  transition:all var(--transition);font-family:var(--font);
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.popup-nav button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-.popup-nav button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.popup-nav button.primary:hover{opacity:.85}
+body::before{width:60vw;height:60vw;max-width:700px;max-height:700px;background:rgba(88,152,240,.14);top:-20%;left:-15%;animation:breathe 9s ease-in-out infinite}
+body::after{width:55vw;height:55vw;max-width:600px;max-height:600px;background:rgba(160,120,240,.13);bottom:-20%;right:-15%;animation:breathe 11s ease-in-out infinite reverse}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 
-@media(max-width:768px){html{font-size:15px}header{padding:0 10px}header .hamburger{display:flex;align-items:center;justify-content:center}header nav{display:none;position:fixed;top:56px;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);flex-direction:column;padding:6px 8px 10px;z-index:25;gap:2px;margin-left:0}header nav.open{display:flex}header nav .sep{display:none}header nav button{font-size:.85rem;width:100%;text-align:left;padding:11px 14px;border-radius:var(--radius)}header .controls #btn-reiniciar{font-size:.7rem;padding:4px 8px}header .controls #btn-aleatorio{display:none}#contador{font-size:.65rem}#fab-aleatorio{display:flex;position:fixed;bottom:20px;right:16px;z-index:30;width:50px;height:50px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(88,152,240,.45);transition:all var(--transition)}#fab-aleatorio:active{transform:scale(.92)}body.has-fab #grid-area,body.has-fab #methods-view{padding-bottom:90px}main{flex-direction:column}aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:5px;border-right:none;border-bottom:1px solid var(--border);align-items:center}aside .section-label{display:none}aside button.diff{font-size:.68rem;padding:5px 10px;border-radius:99px;min-width:auto;flex:none}aside button.diff .dot{width:7px;height:7px}aside button.tema-btn{font-size:.78rem;padding:8px 12px;border-radius:var(--radius)}.grid{grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px}#grid-area{padding:12px 8px}#methods-view{padding:16px 12px}.popup-overlay{padding:12px;align-items:flex-end}.popup{max-height:92vh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;max-width:100%}.popup-nav{padding:0 16px 16px}.popup-body{padding:16px}.popup-header{padding:14px 16px}.method-tabs{flex-wrap:wrap}.method-tabs button{font-size:.75rem;padding:7px 12px}}
+#bg-formulas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#bg-formulas .f{position:absolute;color:var(--text);animation:floaty linear infinite}
+#bg-formulas .f .katex{font-size:1em}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-26px) rotate(3deg)}}
+
+main{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;padding:32px 20px;min-height:100vh}
+
+.title{font-size:clamp(2.6rem,9vw,5.2rem);font-weight:900;letter-spacing:-1.5px;line-height:1.05;text-align:center;animation:fadeUp .8s cubic-bezier(.4,0,.2,1) both}
+.title span{
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--pink),var(--accent));
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:gradientShift 7s linear infinite;
+}
+@keyframes gradientShift{to{background-position:300% 0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+.cards{display:grid;grid-template-columns:repeat(4,minmax(130px,190px));gap:16px;width:100%;justify-content:center}
+.card{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  padding:34px 16px;border-radius:var(--radius-lg);text-decoration:none;
+  background:rgba(17,17,24,.55);border:1px solid var(--border);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:all var(--transition);cursor:pointer;
+  animation:fadeUp .7s cubic-bezier(.4,0,.2,1) both;
+}
+.card:hover{transform:translateY(-8px);background:var(--bg3)}
+.card .ico{font-size:1.7rem;font-weight:800;color:var(--text);letter-spacing:-.5px;transition:color var(--transition)}
+.card .lbl{font-size:.95rem;font-weight:600;color:var(--text2)}
+.card:nth-child(1){animation-delay:.15s}.card:nth-child(2){animation-delay:.25s}.card:nth-child(3){animation-delay:.35s}.card:nth-child(4){animation-delay:.45s}
+.card.c-calculo:hover{border-color:var(--accent);box-shadow:0 12px 40px rgba(88,152,240,.3)}
+.card.c-calculo:hover .ico{color:var(--accent)}
+.card.c-m1:hover{border-color:var(--teal);box-shadow:0 12px 40px rgba(64,196,196,.3)}
+.card.c-m1:hover .ico{color:var(--teal)}
+.card.c-m2:hover{border-color:var(--orange);box-shadow:0 12px 40px rgba(240,160,80,.3)}
+.card.c-m2:hover .ico{color:var(--orange)}
+.card.c-metodos:hover{border-color:var(--purple);box-shadow:0 12px 40px rgba(160,120,240,.3)}
+.card.c-metodos:hover .ico{color:var(--purple)}
+
+@media(max-width:768px){
+  html{font-size:15px}
+  main{gap:36px}
+  .cards{grid-template-columns:repeat(2,1fr);max-width:420px;gap:12px}
+  .card{padding:26px 12px;gap:10px}
+  .card .ico{font-size:1.4rem}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">calcu<span>lo</span></div>
-  <nav id="main-nav">
-    <button data-cat="calculo" class="active">&#x221e; Calculo</button>
-    <button data-cat="m1">{ } M1</button>
-    <button data-cat="m2">log M2</button>
-    <span class="sep"></span>
-    <button data-cat="metodos" class="metodos-btn">&#9776; Metodos</button>
-  </nav>
-  <div class="spacer"></div>
-  <div class="controls" id="exercise-controls">
-    <span id="contador"></span>
-    <button id="btn-reiniciar">Reiniciar</button>
-    <button id="btn-aleatorio" class="primary">Aleatorio <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-left:3px"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="16" r="1.2" fill="currentColor"/><circle cx="16" cy="16" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></button>
-  </div>
-  <button class="hamburger" id="hamburger" aria-label="Menu">&#9776;</button>
-</header>
+<div id="bg-formulas"></div>
 <main>
-  <aside id="sidebar"></aside>
-  <div id="grid-area"></div>
-  <div id="methods-view"></div>
+  <h1 class="title">Entrena<span>Calculo</span></h1>
+  <nav class="cards">
+    <a class="card c-calculo" href="./app.html?cat=calculo"><span class="ico">&#x221e;</span><span class="lbl">Calculo</span></a>
+    <a class="card c-m1" href="./app.html?cat=m1"><span class="ico">{ }</span><span class="lbl">M1</span></a>
+    <a class="card c-m2" href="./app.html?cat=m2"><span class="ico">log</span><span class="lbl">M2</span></a>
+    <a class="card c-metodos" href="./app.html?cat=metodos"><span class="ico">&#x0192;</span><span class="lbl">Metodos</span></a>
+  </nav>
 </main>
-<div id="toast"></div>
-<div class="popup-overlay" id="popup-overlay"><div class="popup" id="popup"></div></div>
-<button id="fab-aleatorio" aria-label="Ejercicio aleatorio" title="Aleatorio">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="8" r="1.3" fill="currentColor"/><circle cx="8" cy="16" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
-</button>
-
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <script>
-// ========== STATIC DATA LOADED FROM exercises.json ==========
-let allData = [];
-let dataByCategory = {};
-let dataById = new Map();
-
-async function loadAllData() {
-  const res = await fetch('./exercises.json');
-  const json = await res.json();
-  allData = json.exercises;
-  allData.forEach(ex => {
-    dataById.set(ex.id, ex);
-    const key = `${ex.tema}-${ex.dificultad}`;
-    if (!dataByCategory[key]) dataByCategory[key] = [];
-    dataByCategory[key].push(ex);
-  });
-}
-
-// ========== METHODS (static, no backend needed) ==========
-const methods = {
-derivadas: [
-  {title:"Regla de la Potencia", formula:"$$\\frac{d}{dx}[ax^n] = a \\cdot n \\cdot x^{n-1}$$", desc:"El exponente multiplica al coeficiente y baja en 1.", eg:"$$f(x)=3x^4 \\;\\Rightarrow\\; f'(x)=12x^3$$"},
-  {title:"Regla del Producto", formula:"$$(u \\cdot v)' = u' \\cdot v + u \\cdot v'$$", desc:"Derivamos la primera por la segunda sin derivar, mas la primera sin derivar por la segunda derivada.", eg:"$$f(x)=x^2\\sin x \\;\\Rightarrow\\; f'(x)=2x\\sin x + x^2\\cos x$$"},
-  {title:"Regla del Cociente", formula:"$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^2}$$", desc:"Derivada del numerador por denominador, menos numerador por derivada del denominador, todo sobre denominador al cuadrado.", eg:"$$f(x)=\\frac{x}{x+1} \\;\\Rightarrow\\; f'(x)=\\frac{1}{(x+1)^2}$$"},
-  {title:"Regla de la Cadena", formula:"$$\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x)$$", desc:"Se deriva de afuera hacia adentro.", eg:"$$f(x)=\\sin(x^2) \\;\\Rightarrow\\; f'(x)=\\cos(x^2)\\cdot 2x$$"},
-  {title:"Derivada del Logaritmo", formula:"$$\\frac{d}{dx}[\\ln(u)] = \\frac{u'}{u}$$", desc:"La derivada del logaritmo natural es la derivada de lo de dentro dividida entre lo de dentro.", eg:"$$f(x)=\\ln(3x+2) \\;\\Rightarrow\\; f'(x)=\\frac{3}{3x+2}$$"},
-],
-integrales: [
-  {title:"Regla de la Potencia", formula:"$$\\int ax^n\\,dx = a\\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1)$$", desc:"Sumamos 1 al exponente y dividimos entre el nuevo exponente.", eg:"$$\\int 4x^3\\,dx = x^4 + C$$"},
-  {title:"Integral de 1/x", formula:"$$\\int \\frac{1}{x}\\,dx = \\ln|x| + C$$", desc:"Caso especial: no se puede usar la regla de potencia.", eg:"$$\\int \\frac{3}{x}\\,dx = 3\\ln|x| + C$$"},
-  {title:"Sustitucion", formula:"$$\\int f(g(x)) \\cdot g'(x)\\,dx = \\int f(u)\\,du$$", desc:"Se busca una parte cuya derivada tambien aparezca.", eg:"$$\\int 2x(x^2+1)^3\\,dx = \\frac{(x^2+1)^4}{4}+C$$"},
-  {title:"Integracion por Partes", formula:"$$\\int u\\,dv = uv - \\int v\\,du$$", desc:"Inversa de la regla del producto.", eg:"$$\\int x e^x\\,dx = e^x(x-1) + C$$"},
-  {title:"Fracciones Parciales", formula:"$$\\frac{P(x)}{Q(x)} = \\frac{A}{x-a} + \\frac{B}{x-b} + \\cdots$$", desc:"Se factoriza el denominador y se descompone.", eg:"$$\\int\\frac{1}{x^2-1}dx = \\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right| + C$$"},
-  {title:"Sustitucion Trigonometrica", formula:"$$\\sqrt{a^2-x^2} \\to x=a\\sin\\theta$$", desc:"Para integrales con raices cuadradas.", eg:"$$\\int\\frac{1}{\\sqrt{1-x^2}}\\,dx = \\arcsin x + C$$"},
-],
-limites: [
-  {title:"Sustitucion Directa", formula:"$$\\lim_{x\\to a} f(x) = f(a)$$", desc:"Si la funcion es continua, evaluamos directamente.", eg:"$$\\lim_{x\\to 2}(x^2+3) = 7$$"},
-  {title:"Factorizacion", formula:"$$\\frac{x^2-a^2}{x-a} = x+a$$", desc:"Cuando da 0/0, factorizamos y cancelamos.", eg:"$$\\lim_{x\\to 3}\\frac{x^2-9}{x-3} = 6$$"},
-  {title:"Racionalizacion", formula:"$$\\frac{\\sqrt{x+a}-\\sqrt{a}}{x}$$", desc:"Multiplicamos por el conjugado para eliminar raices.", eg:"$$\\lim_{x\\to 0}\\frac{\\sqrt{x+1}-1}{x} = \\frac{1}{2}$$"},
-  {title:"Limites al Infinito", formula:"$$\\lim_{x\\to\\infty}\\frac{a_nx^n}{b_mx^m}$$", desc:"n=m: a_n/b_m. n<m: 0. n>m: infinito.", eg:"$$\\lim_{x\\to\\infty}\\frac{2x^3}{3x^3} = \\frac{2}{3}$$"},
-  {title:"Regla de L'Hopital", formula:"$$\\lim\\frac{f(x)}{g(x)} = \\lim\\frac{f'(x)}{g'(x)}$$", desc:"Para 0/0 o inf/inf. Derivar numerador y denominador por separado.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin x}{x} = 1$$"},
-  {title:"Limites Trigonometricos Notables", formula:"$$\\lim_{x\\to 0}\\frac{\\sin x}{x}=1,\\;\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}=\\frac{1}{2}$$", desc:"Limites fundamentales que conviene memorizar.", eg:"$$\\lim_{x\\to 0}\\frac{\\sin(3x)}{x} = 3$$"},
-  {title:"El numero e", formula:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{1}{x}\\right)^x = e$$", desc:"Define e. lim(1+a/x)^(bx) = e^(ab).", eg:"$$\\lim_{x\\to\\infty}\\left(1+\\frac{3}{x}\\right)^{2x} = e^6$$"},
-  {title:"Teorema del Sandwich", formula:"$$g(x) \\leq f(x) \\leq h(x),\\; \\lim g = \\lim h = L \\Rightarrow \\lim f = L$$", desc:"Funcion atrapada entre dos que tienden al mismo limite.", eg:"$$\\lim_{x\\to 0} x^2\\sin(1/x) = 0$$"},
-],
-sistemas: [
-  {title:"Metodo de Sustitucion", formula:"$$\\begin{cases} ax+by=c \\\\ dx+ey=f \\end{cases}$$", desc:"Despejar una variable de una ecuacion y sustituir en la otra.", eg:"$$\\begin{cases} x+y=5 \\\\ 2x-y=1 \\end{cases} \\;\\Rightarrow\\; x=2,\\;y=3$$"},
-  {title:"Metodo de Reduccion", formula:"$$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$$", desc:"Multiplicar ecuaciones para igualar coeficientes y eliminar una variable.", eg:"$$\\begin{cases} 2x+y=7 \\\\ x-y=2 \\end{cases} \\;\\Rightarrow\\; x=3,\\;y=1$$"},
-  {title:"Metodo de Igualacion", formula:"$$y = m_1x + n_1 = m_2x + n_2$$", desc:"Despejar la misma variable en ambas ecuaciones e igualar.", eg:"$$\\begin{cases} y=2x+1 \\\\ y=-x+7 \\end{cases} \\;\\Rightarrow\\; x=2,\\;y=5$$"},
-  {title:"Metodo de Cramer", formula:"$$x=\\frac{\\det\\begin{pmatrix}c & b\\\\ f & e\\end{pmatrix}}{\\det\\begin{pmatrix}a & b\\\\ d & e\\end{pmatrix}}$$", desc:"Usa determinantes para resolver sistemas nxn.", eg:"$$\\begin{cases} 2x+y=5 \\\\ x-y=1 \\end{cases} \\;\\Rightarrow\\; x=2,\\;y=1$$"},
-],
-cuadraticas: [
-  {title:"Formula General", formula:"$$x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$$", desc:"Funciona siempre. Discriminante: b^2-4ac.", eg:"$$x^2-5x+6=0 \\;\\Rightarrow\\; x=2,\\;x=3$$"},
-  {title:"Factorizacion", formula:"$$(x-r_1)(x-r_2) = x^2-(r_1+r_2)x + r_1r_2$$", desc:"Buscar dos numeros que sumen -b y multipliquen c.", eg:"$$x^2-7x+12 = (x-3)(x-4) = 0$$"},
-  {title:"Completar el Trinomio", formula:"$$x^2+bx = (x+\\frac{b}{2})^2 - \\frac{b^2}{4}$$", desc:"Convertir a cuadrado perfecto sumando y restando.", eg:"$$x^2+6x+5 = (x+3)^2 - 4 = 0 \\;\\Rightarrow\\; x=-1,\\;x=-5$$"},
-  {title:"Discriminante", formula:"$$\\Delta = b^2 - 4ac$$", desc:"Delta > 0: 2 soluciones. Delta = 0: 1 doble. Delta < 0: sin solucion real.", eg:"$$2x^2-4x+2=0,\\; \\Delta=0 \\;\\Rightarrow\\; x=1\\;\\text{(doble)}$$"},
-],
-logaritmos: [
-  {title:"Definicion", formula:"$$\\log_a x = b \\;\\Leftrightarrow\\; a^b = x$$", desc:"El logaritmo es el exponente al que hay que elevar la base para obtener el numero.", eg:"$$\\log_2 8 = 3 \\;\\Leftrightarrow\\; 2^3 = 8$$"},
-  {title:"Propiedades basicas", formula:"$$\\log_a(xy)=\\log_a x+\\log_a y,\\; \\log_a(x/y)=\\log_a x-\\log_a y$$", desc:"Producto dentro se convierte en suma. Division en resta.", eg:"$$\\log_2(8\\cdot4) = \\log_2 8 + \\log_2 4 = 3+2=5$$"},
-  {title:"Potencia", formula:"$$\\log_a(x^n) = n\\log_a x$$", desc:"El exponente sale multiplicando al logaritmo.", eg:"$$\\log_3(9^2) = 2\\log_3 9 = 2\\cdot2 = 4$$"},
-  {title:"Cambio de base", formula:"$$\\log_a x = \\frac{\\log_b x}{\\log_b a}$$", desc:"Permite calcular cualquier logaritmo usando una base conocida.", eg:"$$\\log_5 25 = \\frac{\\ln 25}{\\ln 5} = 2$$"},
-  {title:"Logaritmo natural", formula:"$$\\ln e = 1,\\; \\ln 1 = 0,\\; e^{\\ln x} = x$$", desc:"ln = log_e. Es la funcion inversa de la exponencial.", eg:"$$\\ln(e^3) = 3$$"},
-],
-exponencial: [
-  {title:"Ceros de exponencial", formula:"$$e^x = a \\;\\Rightarrow\\; x = \\ln a \\;(a>0)$$", desc:"Aplicar logaritmo natural a ambos lados.", eg:"$$e^x = 5 \\;\\Rightarrow\\; x = \\ln 5$$"},
-  {title:"Exponencial con coeficiente", formula:"$$a \\cdot e^x - b = 0 \\;\\Rightarrow\\; x = \\ln(b/a)$$", desc:"Despejar e^x primero, luego aplicar ln.", eg:"$$3e^x - 9 = 0 \\;\\Rightarrow\\; x = \\ln 3$$"},
-],
-logaritmica: [
-  {title:"Ceros de logaritmica", formula:"$$\\ln x = a \\;\\Rightarrow\\; x = e^a$$", desc:"Aplicar exponencial a ambos lados.", eg:"$$\\ln x = 2 \\;\\Rightarrow\\; x = e^2$$"},
-  {title:"Logaritmica con coeficiente", formula:"$$a\\ln x - b = 0 \\;\\Rightarrow\\; x = e^{b/a}$$", desc:"Despejar ln x primero, luego aplicar exponencial.", eg:"$$2\\ln x - 6 = 0 \\;\\Rightarrow\\; x = e^3$$"},
-],
-};
-
-// ========== STATE ==========
-const CATS = {
-  calculo: { 
-    label: 'Calculo',
-    temas: {
-      derivadas:  { label:'Derivadas',  difs:['facilito','dificilito','extremo'] },
-      integrales: { label:'Integrales', difs:['facilito','dificilito','extremo'] },
-      limites:    { label:'Limites',    difs:['facilito','dificilito','extremo','infi-facil','infi-dificil'] }
-    }
-  },
-  m1: { 
-    label: 'M1',
-    temas: {
-      sistemas:    { label:'Sistemas de ecuaciones 2x2', difs:['facilito','extremo'] },
-      cuadraticas: { label:'Ecuaciones de segundo grado', difs:['extremo'] }
-    }
-  },
-  m2: { 
-    label: 'M2',
-    temas: {
-      logaritmos:  { label:'Logaritmos', difs:['dificilito','extremo'] },
-      exponencial: { label:'Funcion Exponencial', difs:['dificilito'] },
-      logaritmica: { label:'Funcion Logaritmica', difs:['dificilito'] }
-    }
-  }
-};
-const DIF_LABELS = { facilito:'Facil', dificilito:'Intermedio', extremo:'Avanzado', 'infi-facil':'Infinito Facil', 'infi-dificil':'Infinito Dificil' };
-const DIF_DOTS = { facilito:'facil', dificilito:'medio', extremo:'dificil', 'infi-facil':'infi', 'infi-dificil':'infi-h' };
-
-const state = { categoria:'calculo', tema:'derivadas', dificultad:'facilito', pool:[], ejercicios:[], loadCount:100, vistos:new Set(), metodoTema:'derivadas', loading:false };
-
-// ========== DATA ACCESS (static, no backend) ==========
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// ========== LOAD & RENDER GRID ==========
-async function loadGrid() {
-  state.loading = true;
-  const area = document.getElementById('grid-area');
-  area.innerHTML = '<div class="loading"><div class="spinner"></div>Cargando ejercicios...</div>';
-  try {
-    if (!allData.length) await loadAllData();
-    const key = `${state.tema}-${state.dificultad}`;
-    let pool = [...(dataByCategory[key] || [])];
-    // Para limites al infinito: incluir tambien ejercicios existentes con x->inf
-    if (state.dificultad === 'infi-facil' || state.dificultad === 'infi-dificil') {
-      const existingInf = (dataByCategory['limites-facilito'] || [])
-        .concat(dataByCategory['limites-dificilito'] || [])
-        .concat(dataByCategory['limites-extremo'] || [])
-        .filter(ex => ex.e && ex.e.includes('\\infty'));
-      pool = [...pool, ...existingInf];
-    }
-    state.pool = shuffle(pool);
-    state.loadCount = Math.min(100, state.pool.length);
-    state.ejercicios = state.pool.slice(0, state.loadCount);
-    state.vistos = new Set();
-    renderGrid();
-  } catch(e) {
-    area.innerHTML = '<div class="loading">Error al cargar exercises.json</div>';
-  }
-  state.loading = false;
-}
-
-function loadMore() {
-  const prev = state.loadCount;
-  state.loadCount = Math.min(prev + 100, state.pool.length);
-  if (state.loadCount === prev) return; // nothing more to load
-  state.ejercicios = state.pool.slice(0, state.loadCount);
-  renderGrid();
-}
-
-// Sentinel observer for infinite scroll
-function setupSentinel() {
-  const sentinel = document.getElementById('sentinel');
-  if (!sentinel) return;
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !state.loading) {
-      loadMore();
-    }
-  }, { rootMargin: '200px' });
-  observer.observe(sentinel);
-}
-
-function renderGrid() {
-  const area = document.getElementById('grid-area');
-  const items = state.ejercicios;
-  if (!items.length) { area.innerHTML = '<div class="loading">No hay ejercicios.</div>'; return; }
-  const hasMore = state.loadCount < state.pool.length;
-  area.innerHTML = `<div class="grid" id="grid">${items.map((ej, i) => `
-    <div class="card" data-idx="${i}" id="card-${i}">
-      <div class="card-preview">
-        <span class="card-num">#${i+1}</span>
-        <div class="card-body">${ej.e}</div>
-        <div class="card-footer">
-          <span class="card-badge">${state.vistos.has(i) ? 'Visto' : 'Nuevo'}</span>
-          <span class="card-hint">Click para abrir</span>
-        </div>
-      </div>
-    </div>`).join('')}
-    ${hasMore ? '<div class="load-more" id="load-more-indicator"><div class="spinner"></div>Cargando mas...</div>' : '<div class="load-more">'+state.pool.length+' ejercicios cargados</div>'}
-    <div id="sentinel"></div></div>`;
-  try { renderMathInElement(area, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', () => openPopup(parseInt(card.dataset.idx)));
-  });
-  document.getElementById('contador').textContent = `${state.vistos.size} / ${items.length}`;
-  setupSentinel();
-}
-
-// ========== POPUP ==========
-function openPopup(idx) {
-  const ej = state.ejercicios[idx];
-  if (!ej) return;
-  state.vistos.add(idx);
-  const card = document.getElementById('card-' + idx);
-  if (card) card.querySelector('.card-badge').textContent = 'Visto';
-
-  renderPopupContent(idx);
-}
-
-function renderPopupContent(idx) {
-  const ej = state.ejercicios[idx];
-  if (!ej) return;
-  const popup = document.getElementById('popup');
-  const overlay = document.getElementById('popup-overlay');
-
-  popup.innerHTML = `
-    <div class="popup-header">
-      <span class="popup-num">#${idx+1}</span>
-      <button class="popup-close" id="popup-close">&times;</button>
-    </div>
-    <div class="popup-body">
-      <div class="popup-section">
-        <div class="popup-label">Ejercicio</div>
-        <div class="popup-exercise">${ej.e}</div>
-      </div>
-      <div class="popup-section">
-        <div class="popup-label">Resultado</div>
-        <button class="result-reveal" id="result-btn"><span class="arr">&#9660;</span> Ver resultado</button>
-        <div id="result-content" class="result-hidden" style="display:none"></div>
-      </div>
-    </div>
-    <div class="popup-nav">
-      <button id="popup-close-btn">Cerrar</button>
-      <button class="primary" id="popup-next-btn">Siguiente ejercicio &rarr;</button>
-    </div>`;
-
-  overlay.classList.add('open');
-  try { renderMathInElement(popup, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
-
-  document.getElementById('popup-close').addEventListener('click', closePopup);
-  document.getElementById('popup-close-btn').addEventListener('click', closePopup);
-
-  // Result reveal
-  const resultBtn = document.getElementById('result-btn');
-  const resultContent = document.getElementById('result-content');
-  let resultShown = false;
-
-  resultBtn.addEventListener('click', async () => {
-    if (resultShown) {
-      resultContent.style.display = 'none';
-      resultBtn.classList.remove('open');
-      resultBtn.innerHTML = '<span class="arr">&#9660;</span> Ver resultado';
-      resultShown = false;
-      return;
-    }
-    // Get result from in-memory data (no fetch needed)
-    const sol = dataById.get(ej.id);
-    if (sol && sol.s && sol.s.length > 0) {
-      resultContent.className = 'popup-exercise';
-      resultContent.innerHTML = `$$${sol.s[sol.s.length - 1][0]}$$`;
-      resultContent.style.display = '';
-      try { renderMathInElement(resultContent, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
-      resultBtn.classList.add('open');
-      resultBtn.innerHTML = '<span class="arr">&#9660;</span> Ocultar resultado';
-      resultShown = true;
-    } else {
-      resultContent.className = '';
-      resultContent.textContent = 'Sin resultado.';
-      resultContent.style.display = '';
-    }
-  });
-
-  // Next exercise
-  document.getElementById('popup-next-btn').addEventListener('click', () => {
-    const nextIdx = pickRandomUnseen();
-    if (nextIdx !== null) {
-      openPopup(nextIdx);
-      const c = document.getElementById('card-' + nextIdx);
-      if (c) c.scrollIntoView({behavior:'smooth',block:'center'});
-    }
-  });
-
-  document.getElementById('contador').textContent = `${state.vistos.size} / ${state.ejercicios.length}`;
-}
-
-function closePopup() { document.getElementById('popup-overlay').classList.remove('open'); }
-document.getElementById('popup-overlay').addEventListener('click', e => { if (e.target.id === 'popup-overlay') closePopup(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
-
-// ========== CONTROLS ==========
-function pickRandomUnseen() {
-  const unseen = state.ejercicios.map((_, i) => i).filter(i => !state.vistos.has(i));
-  const pool = unseen.length ? unseen : state.ejercicios.map((_, i) => i);
-  if (!pool.length) return null;
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function randomCard() {
-  const idx = pickRandomUnseen();
-  if (idx === null) return;
-  openPopup(idx);
-  const card = document.getElementById('card-' + idx);
-  if (card) card.scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-document.getElementById('btn-aleatorio').addEventListener('click', randomCard);
-document.getElementById('btn-reiniciar').addEventListener('click', () => { loadGrid(); toast('Ejercicios reiniciados'); });
-document.getElementById('fab-aleatorio').addEventListener('click', randomCard);
-
-// Hamburger toggle
-const hamburger = document.getElementById('hamburger');
-const mainNav = document.getElementById('main-nav');
-if (hamburger && mainNav) {
-  hamburger.addEventListener('click', () => {
-    mainNav.classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    if (!hamburger.contains(e.target) && !mainNav.contains(e.target)) {
-      mainNav.classList.remove('open');
-    }
-  });
-}
-
-// ========== METHODS ==========
-function renderMethods() {
-  const mv = document.getElementById('methods-view');
-  const m = methods[state.metodoTema];
-  const methodTabs = ['derivadas','integrales','limites','sistemas','cuadraticas','logaritmos','exponencial','logaritmica'];
-  const methodLabels = {derivadas:'Derivadas',integrales:'Integrales',limites:'Limites',sistemas:'Sistemas',cuadraticas:'Cuadraticas',logaritmos:'Logaritmos',exponencial:'Exponencial',logaritmica:'Logaritmica'};
-  mv.innerHTML = `
-    <div class="methods-header">
-      <h2>Metodos</h2>
-      <p>Guia de referencia con formulas, explicaciones y ejemplos.</p>
-    </div>
-    <div class="method-tabs">
-      ${methodTabs.map(t => `
-        <button data-mt="${t}" class="${t===state.metodoTema?'active':''}">${methodLabels[t]}</button>
-      `).join('')}
-    </div>
-    ${m.map(sec => `
-      <div class="method-card">
-        <h4>${sec.title}</h4>
-        <div class="formula">${sec.formula}</div>
-        <div class="desc">${sec.desc}</div>
-        <div class="example">Ejemplo: ${sec.eg}</div>
-      </div>
-    `).join('')}`;
-  try { renderMathInElement(mv, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
-  mv.querySelectorAll('.method-tabs button').forEach(btn => {
-    btn.addEventListener('click', () => { state.metodoTema = btn.dataset.mt; renderMethods(); });
-  });
-}
-
-// ========== SIDEBAR ==========
-function renderSidebar() {
-  const aside = document.getElementById('sidebar');
-  const cat = CATS[state.categoria];
-  if (!cat) { aside.innerHTML = ''; return; }
-  let html = '<div class="section-label"><span class="sicon">&#9632;</span> Tema</div>';
-  for (const [key, t] of Object.entries(cat.temas)) {
-    html += `<button class="diff tema-btn" data-tema="${key}">${t.label}</button>`;
-  }
-  html += '<div class="section-label" style="margin-top:14px"><span class="sicon">&#9679;</span> Dificultad</div>';
-  const temaCfg = cat.temas[state.tema];
-  if (temaCfg) {
-    for (const d of temaCfg.difs) {
-      const dotClass = DIF_DOTS[d] || 'facil';
-      html += `<button class="diff" data-diff="${d}"><span class="dot ${dotClass}"></span>${DIF_LABELS[d] || d}</button>`;
-    }
-  }
-  if (state.tema === 'exponencial' || state.tema === 'logaritmica') {
-    html += '<div class="section-label" style="margin-top:10px;text-transform:none;font-weight:400;color:var(--text2);line-height:1.4">Encuentra los ceros de cada funcion:<br>f(x)=0 y despeja x.</div>';
-  }
-  aside.innerHTML = html;
-  aside.querySelectorAll('button.tema-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.tema = btn.dataset.tema;
-      state.dificultad = (cat.temas[state.tema] && cat.temas[state.tema].difs[0]) || 'facilito';
-      renderSidebar();
-      loadGrid();
-    });
-  });
-  aside.querySelectorAll('button.diff:not(.tema-btn)').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.dificultad = btn.dataset.diff;
-      renderSidebar();
-      loadGrid();
-    });
-  });
-  aside.querySelectorAll('button.tema-btn').forEach(b => b.classList.toggle('active', b.dataset.tema === state.tema));
-  aside.querySelectorAll('button.diff:not(.tema-btn)').forEach(b => b.classList.toggle('active', b.dataset.diff === state.dificultad));
-}
-
-// ========== NAVIGATION ==========
-function switchView(cat) {
-  const grid = document.getElementById('grid-area'), mv = document.getElementById('methods-view');
-  const sidebar = document.getElementById('sidebar'), ctrls = document.getElementById('exercise-controls');
-  const fab = document.getElementById('fab-aleatorio'), nav = document.getElementById('main-nav');
-  if (nav) nav.classList.remove('open');
-  if (cat === 'metodos') {
-    grid.style.display = 'none'; mv.style.display = 'block'; mv.classList.add('active');
-    sidebar.classList.add('hide'); ctrls.classList.add('hide');
-    if (fab) fab.style.display = 'none';
-    document.body.classList.remove('has-fab');
-    renderMethods();
-  } else {
-    grid.style.display = ''; mv.style.display = 'none'; mv.classList.remove('active');
-    sidebar.classList.remove('hide'); ctrls.classList.remove('hide');
-    if (fab) { fab.style.display = ''; document.body.classList.add('has-fab'); }
-    state.categoria = cat;
-    const catCfg = CATS[cat];
-    if (catCfg) {
-      const firstTema = Object.keys(catCfg.temas)[0];
-      if (firstTema !== state.tema) {
-        state.tema = firstTema;
-        state.dificultad = catCfg.temas[firstTema].difs[0] || 'facilito';
-      }
-    }
-    renderSidebar();
-    loadGrid();
-  }
-}
-
-document.querySelectorAll('nav button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    switchView(btn.dataset.cat);
-  });
+const formulas = [
+  {t:"\\frac{d}{dx}\\left[x^n\\right] = n\\,x^{n-1}", top:'8%', left:'6%', s:1.5, o:.14, d:13, delay:0},
+  {t:"\\int x^n\\,dx = \\frac{x^{n+1}}{n+1}+C", top:'70%', left:'8%', s:1.3, o:.12, d:15, delay:1.2},
+  {t:"\\lim_{x\\to 0}\\frac{\\sin x}{x} = 1", top:'14%', left:'62%', s:1.4, o:.14, d:14, delay:.6},
+  {t:"x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}", top:'30%', left:'74%', s:1.6, o:.12, d:16, delay:2},
+  {t:"\\log_a(xy) = \\log_a x + \\log_a y", top:'62%', left:'70%', s:1.3, o:.13, d:12, delay:1.8},
+  {t:"e^{i\\pi}+1 = 0", top:'80%', left:'30%', s:1.8, o:.15, d:17, delay:.3},
+  {t:"\\int_a^b f(x)\\,dx", top:'22%', left:'30%', s:1.7, o:.12, d:13, delay:2.6},
+  {t:"\\frac{d}{dx}\\left[\\sin x\\right] = \\cos x", top:'78%', left:'55%', s:1.4, o:.13, d:15, delay:1.5},
+  {t:"\\lim_{x\\to\\infty}\\left(1+\\frac{1}{x}\\right)^x = e", top:'40%', left:'8%', s:1.4, o:.13, d:18, delay:.9},
+  {t:"\\begin{cases} ax+by=c \\\\ dx+ey=f \\end{cases}", top:'48%', left:'58%', s:1.5, o:.12, d:14, delay:2.2},
+  {t:"\\log_a x = \\frac{\\ln x}{\\ln a}", top:'10%', left:'40%', s:1.2, o:.11, d:16, delay:1.1},
+  {t:"\\int e^x\\,dx = e^x + C", top:'88%', left:'80%', s:1.3, o:.13, d:13, delay:.4},
+];
+const wrap = document.getElementById('bg-formulas');
+formulas.forEach(f => {
+  const div = document.createElement('div');
+  div.className = 'f';
+  div.style.cssText = `top:${f.top};left:${f.left};opacity:${f.o};animation-duration:${f.d}s;animation-delay:${f.delay}s;font-size:${f.s}rem`;
+  div.innerHTML = katex.renderToString(f.t, {displayMode:true, throwOnError:false});
+  wrap.appendChild(div);
 });
-
-function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
-
-// ========== START ==========
-document.body.classList.add('has-fab');
-renderSidebar();
-loadGrid();
 </script>
 </body>
 </html>
