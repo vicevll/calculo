@@ -5,116 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaCalculo</title>
 <link rel="icon" type="image/png" href="./favicon.png">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07070a;--bg2:#0b0b10;--bg3:#111118;--bg4:#181820;
-  --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);
-  --text:#e6e6f0;--text2:#9090a6;--text3:#585868;
-  --accent:#5898f0;--accent-dim:rgba(88,152,240,.12);
-  --green:#3dcc85;--orange:#f0a050;--red:#e85555;--purple:#a078f0;
-  --pink:#e870a0;--teal:#40c4c4;
-  --radius:10px;--radius-sm:7px;--radius-lg:14px;
-  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-  --transition:220ms cubic-bezier(.4,0,.2,1);
+:root{--bg:#010103;--text:#f4f4f7;--muted:#858592;--line:rgba(255,255,255,.14);--blue:#6aa6ff;--violet:#a687ff;--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
+body{min-height:100svh;overflow:hidden}
+body:before{content:'';position:fixed;inset:0;z-index:4;pointer-events:none;opacity:.16;background-image:radial-gradient(rgba(255,255,255,.7) .45px,transparent .6px);background-size:4px 4px;mix-blend-mode:screen}
+.shell{position:relative;min-height:100svh;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(43,43,60,.16),transparent 38%),#010103}
+#number-field{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at center,transparent 30%,rgba(0,0,0,.22) 68%,rgba(0,0,0,.8) 100%)}
+.topbar{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:28px 42px}
+.brand{color:var(--text);font-size:.75rem;font-weight:800;letter-spacing:.18em;text-decoration:none;text-transform:uppercase}
+.brand span{color:var(--blue)}
+.status{display:flex;align-items:center;gap:9px;color:#777783;font:500 .6rem 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.status i{display:block;width:5px;height:5px;border-radius:50%;background:#9dffbf;box-shadow:0 0 12px #9dffbf;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
+.center-copy{position:absolute;z-index:2;top:12%;left:50%;transform:translateX(-50%);width:min(90vw,850px);text-align:center;pointer-events:none;mix-blend-mode:screen}
+.eyebrow{display:none}
+h1{font-size:clamp(2.8rem,7vw,6rem);font-weight:900;letter-spacing:-.09em;line-height:.9;text-shadow:0 0 34px rgba(255,255,255,.12);animation:rise 1s .08s ease both}
+h1 span{display:inline-block;background:linear-gradient(110deg,#fff 12%,#9fbcff 45%,#b9a3ff 72%,#fff 95%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite}
+@keyframes shine{to{background-position:250% center}}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.modules{position:absolute;left:50%;bottom:37px;z-index:3;display:grid;grid-template-columns:repeat(4,1fr);width:min(720px,calc(100vw - 48px));transform:translateX(-50%);border:1px solid var(--line);background:rgba(2,2,5,.46);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);animation:rise 1s .35s ease both}
+.module{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;min-height:62px;color:var(--muted);font-size:.69rem;font-weight:700;letter-spacing:.16em;text-decoration:none;text-transform:uppercase;transition:color .25s,background .25s}
+.module:after{content:'';position:absolute;right:0;top:18px;bottom:18px;width:1px;background:var(--line)}
+.module:last-child:after{display:none}
+.module .symbol{color:#d8d8e0;font:500 1.05rem 'DM Mono',monospace;letter-spacing:-.08em;transition:color .25s,transform .25s}
+.module:hover{color:#fff;background:rgba(255,255,255,.07)}
+.module:hover .symbol{color:var(--blue);transform:translateY(-2px)}
+.module:nth-child(2):hover .symbol{color:#55e0cd}.module:nth-child(3):hover .symbol{color:#ffc276}.module:nth-child(4):hover .symbol{color:var(--violet)}
+.corner{position:absolute;z-index:3;bottom:43px;color:#575762;font:400 .55rem 'DM Mono',monospace;letter-spacing:.12em}
+.corner.left{left:42px}.corner.right{right:42px}
+@media(max-width:700px){
+  body{overflow:hidden}
+  .topbar{padding:22px 20px}.status{display:none}.center-copy{top:11%}h1{font-size:clamp(2.7rem,13vw,4.5rem);line-height:.88}
+  .modules{bottom:24px;width:calc(100vw - 28px)}.module{min-height:57px;flex-direction:column;gap:5px;font-size:.51rem;letter-spacing:.1em}.module .symbol{font-size:.9rem}.module:after{top:15px;bottom:15px}.corner{display:none}
 }
-html{font-size:17px}
-body{
-  font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;
-  display:flex;flex-direction:column;overflow-x:hidden;-webkit-font-smoothing:antialiased;
-}
-body::before,body::after{
-  content:'';position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;
-}
-body::before{width:60vw;height:60vw;max-width:700px;max-height:700px;background:rgba(88,152,240,.14);top:-20%;left:-15%;animation:breathe 9s ease-in-out infinite}
-body::after{width:55vw;height:55vw;max-width:600px;max-height:600px;background:rgba(160,120,240,.13);bottom:-20%;right:-15%;animation:breathe 11s ease-in-out infinite reverse}
-@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-
-#bg-formulas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-#bg-formulas .f{position:absolute;color:var(--text);animation:floaty linear infinite}
-#bg-formulas .f .katex{font-size:1em}
-@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-26px) rotate(3deg)}}
-
-main{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;padding:32px 20px;min-height:100vh}
-
-.title{font-size:clamp(2.6rem,9vw,5.2rem);font-weight:900;letter-spacing:-1.5px;line-height:1.05;text-align:center;animation:fadeUp .8s cubic-bezier(.4,0,.2,1) both}
-.title span{
-  background:linear-gradient(90deg,var(--accent),var(--purple),var(--pink),var(--accent));
-  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:gradientShift 7s linear infinite;
-}
-@keyframes gradientShift{to{background-position:300% 0}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
-
-.cards{display:grid;grid-template-columns:repeat(4,minmax(130px,190px));gap:16px;width:100%;justify-content:center}
-.card{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  padding:34px 16px;border-radius:var(--radius-lg);text-decoration:none;
-  background:rgba(17,17,24,.55);border:1px solid var(--border);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  transition:all var(--transition);cursor:pointer;
-  animation:fadeUp .7s cubic-bezier(.4,0,.2,1) both;
-}
-.card:hover{transform:translateY(-8px);background:var(--bg3)}
-.card .ico{font-size:1.7rem;font-weight:800;color:var(--text);letter-spacing:-.5px;transition:color var(--transition)}
-.card .lbl{font-size:.95rem;font-weight:600;color:var(--text2)}
-.card:nth-child(1){animation-delay:.15s}.card:nth-child(2){animation-delay:.25s}.card:nth-child(3){animation-delay:.35s}.card:nth-child(4){animation-delay:.45s}
-.card.c-calculo:hover{border-color:var(--accent);box-shadow:0 12px 40px rgba(88,152,240,.3)}
-.card.c-calculo:hover .ico{color:var(--accent)}
-.card.c-m1:hover{border-color:var(--teal);box-shadow:0 12px 40px rgba(64,196,196,.3)}
-.card.c-m1:hover .ico{color:var(--teal)}
-.card.c-m2:hover{border-color:var(--orange);box-shadow:0 12px 40px rgba(240,160,80,.3)}
-.card.c-m2:hover .ico{color:var(--orange)}
-.card.c-metodos:hover{border-color:var(--purple);box-shadow:0 12px 40px rgba(160,120,240,.3)}
-.card.c-metodos:hover .ico{color:var(--purple)}
-
-@media(max-width:768px){
-  html{font-size:15px}
-  main{gap:36px}
-  .cards{grid-template-columns:repeat(2,1fr);max-width:420px;gap:12px}
-  .card{padding:26px 12px;gap:10px}
-  .card .ico{font-size:1.4rem}
-}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div id="bg-formulas"></div>
-<main>
-  <h1 class="title">Entrena<span>Calculo</span></h1>
-  <nav class="cards">
-    <a class="card c-calculo" href="./app.html?cat=calculo"><span class="ico">&#x221e;</span><span class="lbl">Calculo</span></a>
-    <a class="card c-m1" href="./app.html?cat=m1"><span class="ico">{ }</span><span class="lbl">M1</span></a>
-    <a class="card c-m2" href="./app.html?cat=m2"><span class="ico">log</span><span class="lbl">M2</span></a>
-    <a class="card c-metodos" href="./app.html?cat=metodos"><span class="ico">&#x0192;</span><span class="lbl">Metodos</span></a>
-  </nav>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<div class="shell">
+  <canvas id="number-field" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <header class="topbar"><a class="brand" href="./index.html">Entrena<span>Calculo</span></a></header>
+  <main>
+    <div class="center-copy"><h1>Entrena<span>Calculo</span></h1></div>
+    <nav class="modules" aria-label="Secciones">
+      <a class="module" href="./app.html?cat=calculo"><span class="symbol">∞</span><span>Calculo</span></a>
+      <a class="module" href="./app.html?cat=m1"><span class="symbol">{ }</span><span>M1</span></a>
+      <a class="module" href="./app.html?cat=m2"><span class="symbol">log</span><span>M2</span></a>
+      <a class="module" href="./app.html?cat=metodos"><span class="symbol">ƒ</span><span>Metodos</span></a>
+    </nav>
+  </main>
+</div>
 <script>
-const formulas = [
-  {t:"\\frac{d}{dx}\\left[x^n\\right] = n\\,x^{n-1}", top:'8%', left:'6%', s:1.5, o:.14, d:13, delay:0},
-  {t:"\\int x^n\\,dx = \\frac{x^{n+1}}{n+1}+C", top:'70%', left:'8%', s:1.3, o:.12, d:15, delay:1.2},
-  {t:"\\lim_{x\\to 0}\\frac{\\sin x}{x} = 1", top:'14%', left:'62%', s:1.4, o:.14, d:14, delay:.6},
-  {t:"x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}", top:'30%', left:'74%', s:1.6, o:.12, d:16, delay:2},
-  {t:"\\log_a(xy) = \\log_a x + \\log_a y", top:'62%', left:'70%', s:1.3, o:.13, d:12, delay:1.8},
-  {t:"e^{i\\pi}+1 = 0", top:'80%', left:'30%', s:1.8, o:.15, d:17, delay:.3},
-  {t:"\\int_a^b f(x)\\,dx", top:'22%', left:'30%', s:1.7, o:.12, d:13, delay:2.6},
-  {t:"\\frac{d}{dx}\\left[\\sin x\\right] = \\cos x", top:'78%', left:'55%', s:1.4, o:.13, d:15, delay:1.5},
-  {t:"\\lim_{x\\to\\infty}\\left(1+\\frac{1}{x}\\right)^x = e", top:'40%', left:'8%', s:1.4, o:.13, d:18, delay:.9},
-  {t:"\\begin{cases} ax+by=c \\\\ dx+ey=f \\end{cases}", top:'48%', left:'58%', s:1.5, o:.12, d:14, delay:2.2},
-  {t:"\\log_a x = \\frac{\\ln x}{\\ln a}", top:'10%', left:'40%', s:1.2, o:.11, d:16, delay:1.1},
-  {t:"\\int e^x\\,dx = e^x + C", top:'88%', left:'80%', s:1.3, o:.13, d:13, delay:.4},
-];
-const wrap = document.getElementById('bg-formulas');
-formulas.forEach(f => {
-  const div = document.createElement('div');
-  div.className = 'f';
-  div.style.cssText = `top:${f.top};left:${f.left};opacity:${f.o};animation-duration:${f.d}s;animation-delay:${f.delay}s;font-size:${f.s}rem`;
-  div.innerHTML = katex.renderToString(f.t, {displayMode:true, throwOnError:false});
-  wrap.appendChild(div);
-});
+const canvas=document.getElementById('number-field'),ctx=canvas.getContext('2d'),points=[];
+const pointer={x:0,y:0,tx:0,ty:0};
+let width=0,height=0,dpr=1,radius=0;
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);width=window.innerWidth;height=window.innerHeight;
+  canvas.width=width*dpr;canvas.height=height*dpr;canvas.style.width=width+'px';canvas.style.height=height+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+  radius=Math.min(width,height)*(.35);createPoints();
+}
+function createPoints(){
+  points.length=0;const count=Math.min(950,Math.max(480,Math.floor(width*height/1450)));const golden=Math.PI*(3-Math.sqrt(5));
+  for(let i=0;i<count;i++){
+    const y=1-(i+.5)*2/count, r=Math.sqrt(1-y*y),theta=golden*i;
+    points.push({x:Math.cos(theta)*r,y,z:Math.sin(theta)*r,char:String(Math.floor(Math.random()*10)),seed:Math.random(),size:Math.random()*.65+.55});
+  }
+}
+function draw(time){
+  const t=reduceMotion?0:time*.00016,rotY=t+pointer.x*.24,rotX=Math.sin(t*.68)*.12+pointer.y*.13;
+  ctx.clearRect(0,0,width,height);const cx=width*.5,cy=height*.465;
+  const cosY=Math.cos(rotY),sinY=Math.sin(rotY),cosX=Math.cos(rotX),sinX=Math.sin(rotX),cosZ=Math.cos(rotY*.27),sinZ=Math.sin(rotY*.27);
+  const rendered=[];
+  for(const p of points){
+    const x1=p.x*cosY-p.z*sinY,z1=p.x*sinY+p.z*cosY;
+    const y2=p.y*cosX-z1*sinX,z2=p.y*sinX+z1*cosX;
+    const x3=x1*cosZ-y2*sinZ,y3=x1*sinZ+y2*cosZ;
+    const depth=(z2+1)/2,scale=radius/(2.65-z2),x=cx+x3*scale,y=cy+y3*scale;
+    rendered.push({p,x,y,depth,size:p.size*(.55+depth*1.35)});
+  }
+  rendered.sort((a,b)=>a.depth-b.depth);
+  for(const item of rendered){
+    const {p,x,y,depth,size}=item;if(x<-30||x>width+30||y<-30||y>height+30)continue;
+    const alpha=.055+depth*.78;ctx.font=`${Math.max(7,size*radius*.035)}px Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle=`rgba(241,241,247,${alpha})`;if(depth>.82){ctx.shadowColor='rgba(220,225,255,.38)';ctx.shadowBlur=5}else ctx.shadowBlur=0;ctx.fillText(p.char,x,y);
+  }
+  ctx.shadowBlur=0;if(!reduceMotion)requestAnimationFrame(draw);
+}
+window.addEventListener('resize',resize,{passive:true});
+window.addEventListener('pointermove',e=>{pointer.tx=(e.clientX/width-.5);pointer.ty=(e.clientY/height-.5);pointer.x+=(pointer.tx-pointer.x)*.06;pointer.y+=(pointer.ty-pointer.y)*.06},{passive:true});
+resize();if(reduceMotion)draw(0);else requestAnimationFrame(draw);
 </script>
 </body>
 </html>
