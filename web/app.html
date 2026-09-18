@@ -252,10 +252,10 @@ main:before{content:'';position:absolute;inset:0;pointer-events:none;background:
 <header>
   <a class="logo" href="./index.html">Entrena<span>Calculo</span></a>
   <nav id="main-nav">
-    <button data-cat="calculo" class="active">&#x221e; Calculo</button>
+    <button data-cat="calculo" class="active">&#x221e; Cálculo</button>
     <button data-cat="otros">+ Otros</button>
     <span class="sep"></span>
-    <button data-cat="metodos" class="metodos-btn">&#9776; Metodos</button>
+    <button data-cat="metodos" class="metodos-btn">&#9776; Métodos</button>
   </nav>
   <div class="spacer"></div>
   <div class="controls" id="exercise-controls">
@@ -354,12 +354,12 @@ logaritmica: [
 
 // ========== STATE ==========
 const CATS = {
-  calculo: { 
-    label: 'Calculo',
+  calculo: {
+    label: 'Cálculo',
     temas: {
       derivadas:  { label:'Derivadas',  difs:['facilito','dificilito','extremo'] },
       integrales: { label:'Integrales', difs:['facilito','dificilito','extremo'] },
-      limites:    { label:'Limites',    difs:['facilito','dificilito','extremo','infi-facil','infi-dificil'] }
+      limites:    { label:'Límites',    difs:['facilito','dificilito','extremo','infi-facil','infi-dificil'] }
     }
   },
   otros: {
@@ -368,12 +368,12 @@ const CATS = {
       sistemas:    { label:'Sistemas de ecuaciones 2x2', difs:['facilito','extremo'] },
       cuadraticas: { label:'Ecuaciones de segundo grado', difs:['extremo'] },
       logaritmos:  { label:'Logaritmos', difs:['dificilito','extremo'] },
-      exponencial: { label:'Funcion Exponencial', difs:['dificilito'] },
-      logaritmica: { label:'Funcion Logaritmica', difs:['dificilito'] }
+      exponencial: { label:'Función Exponencial', difs:['dificilito'] },
+      logaritmica: { label:'Función Logarítmica', difs:['dificilito'] }
     }
   }
 };
-const DIF_LABELS = { facilito:'Facil', dificilito:'Intermedio', extremo:'Avanzado', 'infi-facil':'Infinito Facil', 'infi-dificil':'Infinito Dificil' };
+const DIF_LABELS = { facilito:'Fácil', dificilito:'Intermedio', extremo:'Avanzado', 'infi-facil':'Infinito Fácil', 'infi-dificil':'Infinito Difícil' };
 const DIF_DOTS = { facilito:'facil', dificilito:'medio', extremo:'dificil', 'infi-facil':'infi', 'infi-dificil':'infi-h' };
 
 const state = { categoria:'calculo', tema:'derivadas', dificultad:'facilito', pool:[], ejercicios:[], loadCount:100, vistos:new Set(), metodoTema:'derivadas', loading:false };
@@ -452,7 +452,7 @@ function renderGrid() {
         </div>
       </div>
     </div>`).join('')}
-    ${hasMore ? '<div class="load-more" id="load-more-indicator"><div class="spinner"></div>Cargando mas...</div>' : '<div class="load-more">'+state.pool.length+' ejercicios cargados</div>'}
+    ${hasMore ? '<div class="load-more" id="load-more-indicator"><div class="spinner"></div>Cargando más...</div>' : '<div class="load-more">'+state.pool.length+' ejercicios cargados</div>'}
     <div id="sentinel"></div></div>`;
   try { renderMathInElement(area, { delimiters:[{left:"$$",right:"$$",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError:false }); } catch(e) {}
   document.querySelectorAll('.card').forEach(card => {
@@ -588,15 +588,52 @@ if (hamburger && mainNav) {
 }
 
 // ========== METHODS ==========
+function fixAccents(text) {
+  return text
+    .replace(/\bSustitucion\b/g, 'Sustitución')
+    .replace(/\bIntegracion\b/g, 'Integración')
+    .replace(/\bFactorizacion\b/g, 'Factorización')
+    .replace(/\bRacionalizacion\b/g, 'Racionalización')
+    .replace(/\bLogaritmica\b/g, 'Logarítmica')
+    .replace(/\blogaritmica\b/g, 'logarítmica')
+    .replace(/\bCuadraticas\b/g, 'Cuadráticas')
+    .replace(/\bL'Hopital\b/g, "L'Hôpital")
+    .replace(/\bSandwich\b/g, 'Sándwich')
+    .replace(/\bDefinicion\b/g, 'Definición')
+    .replace(/\bPropiedades basicas\b/g, 'Propiedades básicas')
+    .replace(/\bLimites\b/g, 'Límites')
+    .replace(/\blimites\b/g, 'límites')
+    .replace(/\bLimite\b/g, 'Límite')
+    .replace(/\blimite\b/g, 'límite')
+    .replace(/\bTrigonometricos\b/g, 'Trigonométricos')
+    .replace(/\btrigonometricos\b/g, 'trigonométricos')
+    .replace(/\bFormula\b/g, 'Fórmula')
+    .replace(/\bformula\b/g, 'fórmula')
+    .replace(/\bFuncion\b/g, 'Función')
+    .replace(/\bfuncion\b/g, 'función')
+    .replace(/\bnumero\b/g, 'número')
+    .replace(/\bNumero\b/g, 'Número')
+    .replace(/\braices\b/g, 'raíces')
+    .replace(/\bsolucion\b/g, 'solución')
+    .replace(/\bSolucion\b/g, 'Solución')
+    .replace(/\btambien\b/g, 'también')
+    .replace(/\bMetodo\b/g, 'Método')
+    .replace(/\bmetodo\b/g, 'método')
+    .replace(/\bReduccion\b/g, 'Reducción')
+    .replace(/\bIgualacion\b/g, 'Igualación')
+    .replace(/\bmas\b/g, 'más')
+    .replace(/\bMas\b/g, 'Más')
+    .replace(/\bademas\b/g, 'además');
+}
 function renderMethods() {
   const mv = document.getElementById('methods-view');
   const m = methods[state.metodoTema];
   const methodTabs = ['derivadas','integrales','limites','sistemas','cuadraticas','logaritmos','exponencial','logaritmica'];
-  const methodLabels = {derivadas:'Derivadas',integrales:'Integrales',limites:'Limites',sistemas:'Sistemas',cuadraticas:'Cuadraticas',logaritmos:'Logaritmos',exponencial:'Exponencial',logaritmica:'Logaritmica'};
+  const methodLabels = {derivadas:'Derivadas',integrales:'Integrales',limites:'Límites',sistemas:'Sistemas',cuadraticas:'Cuadráticas',logaritmos:'Logaritmos',exponencial:'Exponencial',logaritmica:'Logarítmica'};
   mv.innerHTML = `
     <div class="methods-header">
-      <h2>Metodos</h2>
-      <p>Guia de referencia con formulas, explicaciones y ejemplos.</p>
+      <h2>Métodos</h2>
+      <p>Guía de referencia con fórmulas, explicaciones y ejemplos.</p>
     </div>
     <div class="method-tabs">
       ${methodTabs.map(t => `
@@ -605,9 +642,9 @@ function renderMethods() {
     </div>
     ${m.map(sec => `
       <div class="method-card">
-        <h4>${sec.title}</h4>
+        <h4>${fixAccents(sec.title)}</h4>
         <div class="formula">${sec.formula}</div>
-        <div class="desc">${sec.desc}</div>
+        <div class="desc">${fixAccents(sec.desc)}</div>
         <div class="example">Ejemplo: ${sec.eg}</div>
       </div>
     `).join('')}`;
@@ -635,7 +672,7 @@ function renderSidebar() {
     }
   }
   if (state.tema === 'exponencial' || state.tema === 'logaritmica') {
-    html += '<div class="section-label" style="margin-top:10px;text-transform:none;font-weight:400;color:var(--text2);line-height:1.4">Encuentra los ceros de cada funcion:<br>f(x)=0 y despeja x.</div>';
+    html += '<div class="section-label" style="margin-top:10px;text-transform:none;font-weight:400;color:var(--text2);line-height:1.4">Encuentra los ceros de cada función:<br>f(x)=0 y despeja x.</div>';
   }
   aside.innerHTML = html;
   aside.querySelectorAll('button.tema-btn').forEach(btn => {
